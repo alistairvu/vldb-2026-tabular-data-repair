@@ -144,9 +144,9 @@ def corrupt_value(
 def select_corruptions(original, specs, eligible, count, rng):
     """Redraw unsafe cell selections while retaining every observed enum value."""
     remaining = {
-        column: Counter(row[column] for row in original
-                        if not is_ignored(row[column]))
-        for column, spec in specs.items() if spec["type"] == "enum"
+        column: Counter(row[column] for row in original if not is_ignored(row[column]))
+        for column, spec in specs.items()
+        if spec["type"] == "enum"
     }
     required = sum(len(values) for values in remaining.values())
     if count > len(eligible) - required:
@@ -229,7 +229,12 @@ def generate_case_set(
         specs = manifest["oracles"]
         if list(specs) != columns:
             raise ValueError(f"oracle columns do not match dataset: {dataset_name}")
-        eligible = [(row, column) for row in range(count) for column in columns if not is_ignored(original[row][column])]
+        eligible = [
+            (row, column)
+            for row in range(count)
+            for column in columns
+            if not is_ignored(original[row][column])
+        ]
         total_corruption_count = round(len(eligible) * generation["corruption_rate"])
         missing_count = round(total_corruption_count * missing_rate)
         affected, redraws = select_corruptions(
@@ -255,8 +260,13 @@ def generate_case_set(
             )
         for row, column in selected:
             source = original[row][column]
-            dirty, edits = corrupt_value(source, predicate(specs[column]), rng,
-                                        generation["min_edits_per_cell"], generation["max_edits_per_cell"])
+            dirty, edits = corrupt_value(
+                source,
+                predicate(specs[column]),
+                rng,
+                generation["min_edits_per_cell"],
+                generation["max_edits_per_cell"],
+            )
             corrupted[row][column] = dirty
             corruptions.append(
                 {
@@ -273,17 +283,25 @@ def generate_case_set(
         write_csv(destination / "original.csv", columns, original)
         write_csv(destination / "corrupted.csv", columns, corrupted)
         write_json(oracle_path, manifest)
-        write_json(destination / "case.json", {
-            "schema_version": 1, "dataset": dataset_name, "seed": generation["seed"],
-            "source_row_indices": source_indices, "row_count": count, "column_count": len(columns),
-            "eligible_cell_count": len(eligible),
-            "corrupted_cell_count": len(corruptions),
-            "character_corrupted_cell_count": len(selected),
-            "missing_cell_count": len(missing_cells),
-            "category_preservation_redraws": redraws,
-            "generation": generation,
-            "run_metadata": config.get("run_metadata", {}), "corruptions": corruptions,
-        })
+        write_json(
+            destination / "case.json",
+            {
+                "schema_version": 1,
+                "dataset": dataset_name,
+                "seed": generation["seed"],
+                "source_row_indices": source_indices,
+                "row_count": count,
+                "column_count": len(columns),
+                "eligible_cell_count": len(eligible),
+                "corrupted_cell_count": len(corruptions),
+                "character_corrupted_cell_count": len(selected),
+                "missing_cell_count": len(missing_cells),
+                "category_preservation_redraws": redraws,
+                "generation": generation,
+                "run_metadata": config.get("run_metadata", {}),
+                "corruptions": corruptions,
+            },
+        )
         print(
             f"{output_name}/{dataset_name}: {len(selected)} character corruptions, "
             f"{len(missing_cells)} missing cells"
@@ -345,7 +363,11 @@ def evaluate(
     if len(repaired) != len(original):
         raise ValueError("repaired CSV row count does not match original.csv")
     specs = read_json(oracle_manifest(case_dir))["oracles"]
-    telemetry = read_json(telemetry_path) if telemetry_path and telemetry_path.is_file() else None
+    telemetry = (
+        read_json(telemetry_path)
+        if telemetry_path and telemetry_path.is_file()
+        else None
+    )
     timed = {}
     if telemetry:
         records = telemetry.get("cells")

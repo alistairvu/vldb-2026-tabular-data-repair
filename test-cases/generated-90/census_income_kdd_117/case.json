@@ -1011,16 +1011,13 @@
   "character_corrupted_cell_count": 32328,
   "missing_cell_count": 3592,
   "category_preservation_redraws": 143,
-  "oracle_manifest": "../../oracles/census_income_kdd_117/oracles.json",
   "generation": {
     "seed": 0,
     "max_rows": 1000,
     "missing_rate": 0.1,
     "min_edits_per_cell": 1,
     "max_edits_per_cell": 5,
-    "corruption_rate": 0.9,
-    "numeric_enum_max_distinct": 32,
-    "text_enum_max_distinct": 2048
+    "corruption_rate": 0.9
   },
   "run_metadata": {},
   "corruptions": [

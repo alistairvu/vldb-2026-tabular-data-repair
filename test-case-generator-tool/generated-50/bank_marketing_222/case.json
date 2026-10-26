@@ -1011,16 +1011,13 @@
   "character_corrupted_cell_count": 7112,
   "missing_cell_count": 790,
   "category_preservation_redraws": 0,
-  "oracle_manifest": "../../oracles/bank_marketing_222/oracles.json",
   "generation": {
     "seed": 0,
     "max_rows": 1000,
     "missing_rate": 0.1,
     "min_edits_per_cell": 1,
     "max_edits_per_cell": 5,
-    "corruption_rate": 0.5,
-    "numeric_enum_max_distinct": 32,
-    "text_enum_max_distinct": 2048
+    "corruption_rate": 0.5
   },
   "run_metadata": {},
   "corruptions": [

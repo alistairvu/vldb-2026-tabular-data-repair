@@ -766,9 +766,8 @@ def _oracle_accepts(oracle: Oracle, values: Sequence[str],
     started = time.perf_counter_ns()
     result = oracle.accepts_batch(values, deadline)
     measurements.oracle_execution_time_ns += _elapsed(started)
-    if (not result or len(result) > len(values) or
-            (len(result) < len(values) and not result[-1])):
-        raise RuntimeError("oracle result is not a valid boolean prefix")
+    if len(result) != len(values):
+        raise RuntimeError("oracle result count mismatch")
     if any(type(item) is not bool for item in result):
         raise RuntimeError("oracle result is not boolean")
     return result

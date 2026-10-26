@@ -13,14 +13,14 @@ import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from contextlib import redirect_stderr
 from pathlib import Path
-from typing import Callable, Sequence
-from unittest.mock import patch
+from typing import Callable
 
 HERE = Path(__file__).resolve().parent
 ALGORITHM = HERE / "algorithm"
 sys.path.insert(0, str(ALGORITHM))
 
 import sherma as algorithm
+from oracle.build import build_oracle
 
 
 SHARED = HERE / "test-cases"
@@ -43,82 +43,33 @@ def read_csv(path: Path) -> tuple[list[str], list[list[str]]]:
 
 
 def predicate(spec: dict[str, object]) -> Callable[[str], bool]:
-    accepts_empty = spec.get("accepts_empty") is True
     if spec.get("type") == "enum":
         allowed = set(spec["values"])
-        return lambda value: (accepts_empty if value in MISSING else value in allowed)
+        return lambda value: value not in MISSING and value in allowed
     if spec.get("type") == "regex":
         expression = re.compile(str(spec["regex"]))
-        return lambda value: (accepts_empty if value in MISSING else
-                              expression.fullmatch(value) is not None)
+        return lambda value: value not in MISSING and expression.fullmatch(value) is not None
     raise RuntimeError(f"unsupported oracle type: {spec.get('type')!r}")
 
 
-class ManifestOracle:
-    """In-process form of the bundled enum/regex oracle for benchmark speed."""
-
-    def __init__(self, executable: Path) -> None:
-        spec = read_json(executable.with_suffix(".json"))
-        if not isinstance(spec, dict):
-            raise RuntimeError(f"invalid oracle specification: {executable}")
-        self.accepts = predicate(spec)
-        self.calls = 0
-        self.candidates_submitted = 0
-        self.cache: dict[str, bool] = {}
-
-    def accepts_batch(self, values: Sequence[str],
-                      deadline: float | None = None) -> list[bool]:
-        if not values:
-            return []
-        result = []
-        for value in values:
-            if deadline is not None and time.monotonic() >= deadline:
-                raise RuntimeError("cell timeout")
-            if value not in self.cache:
-                self.calls += 1
-                self.candidates_submitted += 1
-                self.cache[value] = self.accepts(value)
-            accepted = self.cache[value]
-            result.append(accepted)
-            if accepted:
-                break
-        return result
-
-
 def manifest_path(case: Path) -> Path:
-    metadata = read_json(case / "case.json")
-    if not isinstance(metadata, dict):
-        raise RuntimeError(f"invalid case metadata: {case}")
-    relative = metadata.get("oracle_manifest", "oracles.json")
-    if not isinstance(relative, str):
-        raise RuntimeError(f"invalid oracle manifest path: {case}")
-    return (case / relative).resolve()
+    return HERE / "test-case-generator-tool" / "oracles" / f"{case.name}.json"
 
 
-def prepare_oracles(case: Path, destination: Path) -> list[dict[str, object]]:
+def oracle_specs(case: Path) -> dict[str, dict[str, object]]:
     manifest = read_json(manifest_path(case))
-    if not isinstance(manifest, dict) or not isinstance(manifest.get("oracles"), list):
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("oracles"), dict):
         raise RuntimeError(f"invalid oracle manifest: {manifest_path(case)}")
-    specs = manifest["oracles"]
-    destination.mkdir()
-    suffix = ".exe" if os.name == "nt" else ""
-    for index, spec in enumerate(specs):
-        if not isinstance(spec, dict):
-            raise RuntimeError("oracle entries must be JSON objects")
-        stem = f"oracle_{index:03d}"
-        (destination / f"{stem}{suffix}").touch()
-        (destination / f"{stem}.json").write_text(
-            json.dumps(spec, indent=2) + "\n", encoding="utf-8")
-    return specs
+    return manifest["oracles"]
 
 
 def evaluate(case: Path, output_path: Path, telemetry_path: Path,
-             specs: list[dict[str, object]]) -> dict[str, object]:
+             specs: dict[str, dict[str, object]]) -> dict[str, object]:
     columns, original = read_csv(case / "original.csv")
     output_columns, output = read_csv(output_path)
     if output_columns != columns or len(output) != len(original):
         raise RuntimeError("output CSV shape differs from original.csv")
-    if [spec.get("column") for spec in specs] != columns:
+    if set(specs) != set(columns):
         raise RuntimeError("oracle columns differ from CSV columns")
 
     telemetry = read_json(telemetry_path)
@@ -138,7 +89,7 @@ def evaluate(case: Path, output_path: Path, telemetry_path: Path,
         raise RuntimeError("telemetry summary differs from its cell records")
 
     valid = exact = eligible = missing = invalid = 0
-    accepts = [predicate(spec) for spec in specs]
+    accepts = [predicate(specs[column]) for column in columns]
     for clean_row, output_row in zip(original, output):
         for column, (clean, value) in enumerate(zip(clean_row, output_row)):
             if clean not in MISSING:
@@ -172,18 +123,16 @@ def evaluate(case: Path, output_path: Path, telemetry_path: Path,
     return report
 
 
-def run_case(case: Path, output: Path) -> dict[str, object]:
+def run_case(case: Path, output: Path, oracle: Path) -> dict[str, object]:
     output.mkdir()
-    oracles = output / "oracles"
-    specs = prepare_oracles(case, oracles)
+    specs = oracle_specs(case)
     repaired = output / "repaired.csv"
     telemetry = output / "telemetry.json"
     with (output / "progress.log").open("w", encoding="utf-8") as progress, \
-            redirect_stderr(progress), patch.object(
-                algorithm, "ExternalOracle", ManifestOracle):
+            redirect_stderr(progress):
         algorithm.run_pipeline(
             case / "corrupted.csv", case / "original.csv",
-            SCHEMAS / f"{case.name}.json", CONFIG, oracles, repaired, telemetry)
+            SCHEMAS / f"{case.name}.json", CONFIG, oracle, repaired, telemetry)
     report = evaluate(case, repaired, telemetry, specs)
     (output / "benchmark.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -263,6 +212,18 @@ def available_workers(job_count: int) -> int:
     return min(job_count, count or 1)
 
 
+def build_dataset_oracles(selected: list[Path], root: Path) -> dict[str, Path]:
+    compiled: dict[str, Path] = {}
+    suffix = ".exe" if os.name == "nt" else ""
+    for case in selected:
+        if case.name in compiled:
+            continue
+        output = root / "oracles" / case.name / f"oracle{suffix}"
+        print(f"Compiling oracle for {case.name}...", flush=True)
+        compiled[case.name] = build_oracle(manifest_path(case), output)
+    return compiled
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run Sherma against bundled VLDB cases")
     parser.add_argument("mode", choices=("smoke", "test"))
@@ -277,13 +238,16 @@ def main() -> int:
     root.mkdir()
     print(f"Artifacts: {root}", flush=True)
     selected = cases(args.mode)
-    jobs = [(case, root / f"{case.parent.name}-{case.name}") for case in selected]
+    compiled = build_dataset_oracles(selected, root)
+    jobs = [(case, root / f"{case.parent.name}-{case.name}", compiled[case.name])
+            for case in selected]
     workers = available_workers(len(jobs))
     timer = RunProgress(len(jobs))
     executor = ProcessPoolExecutor(max_workers=workers)
     timer_started = False
     try:
-        futures = {executor.submit(run_case, case, output): case for case, output in jobs}
+        futures = {executor.submit(run_case, case, output, oracle): case
+                   for case, output, oracle in jobs}
         timer.start()
         timer_started = True
         timer.begin_case(f"running with {workers} workers")

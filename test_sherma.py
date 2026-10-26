@@ -15,6 +15,7 @@ sys.path.insert(0, str(ALGORITHM))
 import core
 import sherma
 import test_suite
+from oracle.build import build_oracle, validate_manifest
 
 
 class SetOracle:
@@ -24,12 +25,7 @@ class SetOracle:
 
     def accepts_batch(self, values, deadline=None):
         self.batches.append(list(values))
-        result = []
-        for value in values:
-            result.append(value in self.accepted)
-            if result[-1]:
-                break
-        return result
+        return [value in self.accepted for value in values]
 
 
 class TimerTests(unittest.TestCase):
@@ -47,6 +43,28 @@ class TimerTests(unittest.TestCase):
                           create=True):
             self.assertEqual(test_suite.available_workers(8), 8)
             self.assertEqual(test_suite.available_workers(20), 12)
+
+    def test_smoke_and_full_modes_build_one_oracle_per_dataset(self):
+        smoke = test_suite.cases("smoke")
+        full = test_suite.cases("test")
+        self.assertEqual([case.name for case in smoke], ["adult_20"])
+        self.assertEqual(len(full), 8)
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+                test_suite, "build_oracle", side_effect=lambda _manifest, output: output
+        ) as build:
+            root = Path(directory)
+            smoke_oracles = test_suite.build_dataset_oracles(smoke, root / "smoke")
+            self.assertEqual(set(smoke_oracles), {"adult_20"})
+            self.assertEqual(build.call_count, 1)
+            build.reset_mock()
+            full_oracles = test_suite.build_dataset_oracles(full, root / "test")
+            self.assertEqual(set(full_oracles), {
+                "adult_20", "bank_marketing_222",
+                "census_income_kdd_117", "support2_880",
+            })
+            self.assertEqual(build.call_count, 4)
+            self.assertTrue(all(path.name in {"oracle", "oracle.exe"}
+                                for path in full_oracles.values()))
 
 def core_config(**changes):
     values = dict(n=2, ngrams_batch_size=core.UNLIMITED,
@@ -268,6 +286,17 @@ class CoreTests(unittest.TestCase):
         self.assertNotIn("faraway", [value for batch in oracle.batches for value in batch])
         self.assertTrue({"ac", "ad"}.issubset(session.positives.values()))
 
+    def test_full_oracle_batch_may_exceed_candidate_minimum(self):
+        measurements = core.AlgorithmMeasurements()
+        session = core.BatchSession(["ab"], core_config(n=0), measurements)
+        with patch.object(core, "rsr_repairs", return_value=[
+                core.RepairCandidate("ac", 1), core.RepairCandidate("ad", 1)]):
+            candidates, failure = session.repair_candidates(
+                "az", SetOracle({"ac", "ad"}), time.monotonic() + 5,
+                measurements, 1, 3)
+        self.assertEqual(candidates, ["ac", "ad"])
+        self.assertEqual(failure, "")
+
     def test_distance_cap_can_return_no_candidates_without_oracle_call(self):
         measurements = core.AlgorithmMeasurements()
         session = core.BatchSession(["ab"], core_config(n=0), measurements)
@@ -290,8 +319,9 @@ class CoreTests(unittest.TestCase):
         measurements = core.AlgorithmMeasurements()
         session = core.BatchSession(["ab"], core_config(n=0), measurements)
         oracle = TimeoutAfterFirst({"ac", "ad"})
-        with patch.object(core, "rsr_repairs", return_value=[
-                core.RepairCandidate("ac", 1), core.RepairCandidate("ad", 1)]):
+        with patch.object(core, "rsr_repairs", side_effect=[
+                [core.RepairCandidate("ac", 1)],
+                [core.RepairCandidate("ad", 1)]]):
             candidates, failure = session.repair_candidates(
                 "az", oracle, time.monotonic() + 5, measurements, 2, 3)
         self.assertEqual(candidates, ["ac"])
@@ -315,8 +345,8 @@ class CoreTests(unittest.TestCase):
 
 
 class FakeExternalOracle:
-    def __init__(self, executable):
-        self.column = int(Path(executable).stem.split("_")[-1])
+    def __init__(self, executable, column):
+        self.column = column
         self.calls = 0
         self.candidates_submitted = 0
         self.cache = {}
@@ -329,17 +359,52 @@ class FakeExternalOracle:
                 queried = True
                 self.candidates_submitted += 1
                 self.cache[value] = (
-                    value in {"A", "B"} if self.column == 0 else
+                    value in {"A", "B"} if self.column == "kind" else
                     value in {"1", "2", "3", "10", "11", "12"})
-            accepted = self.cache[value]
-            result.append(accepted)
-            if accepted:
-                break
+            result.append(self.cache[value])
         self.calls += queried
         return result
 
 
 class PipelineTests(unittest.TestCase):
+    def test_oracle_manifest_rejects_legacy_and_unknown_fields(self):
+        manifest = {
+            "dataset": "sample", "source": "clean.csv",
+            "oracles": {"value": {
+                "type": "enum", "values": ["a"],
+            }},
+        }
+        self.assertEqual(validate_manifest(manifest), manifest)
+        for field, value in (("schema_version", 2), ("unknown", True)):
+            legacy = {**manifest, field: value}
+            with self.subTest(field=field), self.assertRaisesRegex(
+                    RuntimeError, "unsupported fields"):
+                validate_manifest(legacy)
+        legacy_rule = {**manifest, "oracles": {"value": {
+            **manifest["oracles"]["value"], "accepts_empty": False}}}
+        with self.assertRaisesRegex(RuntimeError, "accepts_empty"):
+            validate_manifest(legacy_rule)
+        legacy_array = {**manifest, "oracles": [manifest["oracles"]["value"]]}
+        with self.assertRaisesRegex(RuntimeError, "object keyed by column"):
+            validate_manifest(legacy_array)
+        old_empty_policy = {**manifest, "empty_policy": "rejected"}
+        with self.assertRaisesRegex(RuntimeError, "empty_policy"):
+            validate_manifest(old_empty_policy)
+
+    def test_oracle_compiler_requires_dataset_filename(self):
+        manifest = {
+            "dataset": "sample", "source": "clean.csv",
+            "oracles": {"value": {
+                "type": "enum", "values": ["a"],
+            }},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "wrong-name.json"
+            source.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "<dataset>.json"):
+                build_oracle(source, root / "oracle.exe")
+
     def test_candidate_output_name_replaces_the_requested_suffix(self):
         self.assertEqual(sherma.candidate_output_path(Path("output.csv")),
                          Path("output.tmp.csv"))
@@ -356,7 +421,7 @@ class PipelineTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "cannot open config"):
                 sherma.run_pipeline(
                     root / "input.csv", root / "truth.csv", root / "schema.json",
-                    root / "missing-config.json", root / "oracles", output,
+                    root / "missing-config.json", root / "oracle", output,
                     telemetry)
             log = (root / "error.log").read_text(encoding="utf-8")
             self.assertIn("RuntimeError: cannot open config", log)
@@ -366,11 +431,12 @@ class PipelineTests(unittest.TestCase):
             self.assertTrue(sherma.candidate_output_path(output).exists())
 
     def test_external_oracle_batch_protocol(self):
-        oracle = sherma.ExternalOracle(Path("oracle"))
+        oracle = sherma.ExternalOracle(Path("oracle"), "age")
         with patch.object(sherma.subprocess, "run", return_value=SimpleNamespace(
                 returncode=0, stdout="[false,true]")) as run:
             self.assertEqual(oracle.accepts_batch(["a", "b"]), [False, True])
-            self.assertEqual(json.loads(run.call_args.kwargs["input"]), ["a", "b"])
+            self.assertEqual(json.loads(run.call_args.kwargs["input"]),
+                             {"column": "age", "candidates": ["a", "b"]})
             self.assertEqual(oracle.accepts_batch(["a", "b"]), [False, True])
             self.assertEqual(run.call_count, 1)
         for output in ("[]", "[false]", "[1]", "not-json"):
@@ -378,13 +444,13 @@ class PipelineTests(unittest.TestCase):
                     sherma.subprocess, "run",
                     return_value=SimpleNamespace(returncode=0, stdout=output)):
                 with self.assertRaises(RuntimeError):
-                    sherma.ExternalOracle(Path("oracle")).accepts_batch(["a", "b"])
+                    sherma.ExternalOracle(Path("oracle"), "age").accepts_batch(["a", "b"])
 
     def test_external_oracle_obeys_deadline(self):
         with patch.object(sherma.subprocess, "run",
                           side_effect=sherma.subprocess.TimeoutExpired("oracle", 1)):
             with self.assertRaisesRegex(RuntimeError, "cell timeout"):
-                sherma.ExternalOracle(Path("oracle")).accepts_batch(
+                sherma.ExternalOracle(Path("oracle"), "age").accepts_batch(
                     ["a"], time.monotonic() + 1)
 
     def test_row_jev_request_contains_all_candidate_sets(self):
@@ -443,13 +509,9 @@ class PipelineTests(unittest.TestCase):
             ground_truth_path = root / "original.csv"
             schema_path = root / "schema.json"
             config_path = root / "config.json"
-            oracles = root / "oracles"
+            oracle = root / "oracle"
             output = root / "repaired.csv"
             telemetry = root / "telemetry.json"
-            oracles.mkdir()
-            suffix = ".exe" if sherma.os.name == "nt" else ""
-            for column in range(2):
-                (oracles / f"oracle_{column:03d}{suffix}").touch()
             with input_path.open("w", newline="", encoding="utf-8") as stream:
                 csv.writer(stream).writerows([
                     ["kind", "value"], ["A", "1"], ["A", "3"],
@@ -472,12 +534,13 @@ class PipelineTests(unittest.TestCase):
                 return {column: sherma.JevSelection(0, 0.4, sherma.JEV_MODEL)
                         for column in candidate_sets}
 
-            with patch.object(sherma, "ExternalOracle", FakeExternalOracle), \
+            with patch.object(sherma, "oracle_path", return_value=oracle), \
+                    patch.object(sherma, "ExternalOracle", FakeExternalOracle), \
                     patch.object(sherma, "select_row_with_jev", side_effect=select):
                 with patch.dict(sherma.os.environ,
                                 {"TYPESAFE_API_KEY": "test-key"}):
                     sherma.run_pipeline(input_path, ground_truth_path, schema_path,
-                                        config_path, oracles, output, telemetry)
+                                        config_path, oracle, output, telemetry)
             candidate_output = sherma.candidate_output_path(output)
             with candidate_output.open(newline="", encoding="utf-8") as stream:
                 rows = list(csv.reader(stream))

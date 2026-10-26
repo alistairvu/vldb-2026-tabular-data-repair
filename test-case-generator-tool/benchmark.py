@@ -8,8 +8,6 @@ import csv
 import hashlib
 import importlib.util
 import json
-import os
-import math
 import random
 import re
 import string
@@ -25,8 +23,6 @@ SUITES = tuple(path for path in (ROOT / name for name in (
 DATASETS = ("adult_20", "bank_marketing_222", "census_income_kdd_117", "support2_880")
 IGNORED_VALUES = {"", "?"}
 INSERT_ALPHABET = string.ascii_letters + string.digits + string.punctuation + " "
-INTEGER = re.compile(r"[+-]?\d+")
-DECIMAL = re.compile(r"[+-]?\d+\.\d+")
 
 
 def read_json(path: Path) -> Any:
@@ -58,52 +54,6 @@ def is_ignored(value: str) -> bool:
     return value in IGNORED_VALUES
 
 
-def numeric_shape(value: str) -> str:
-    sign = re.escape(value[0]) if value[0] in "+-" else ""
-    body = value[1:] if sign else value
-    if "." in body:
-        whole, fraction = body.split(".")
-        return sign + rf"\d{{{len(whole)}}}\.\d{{{len(fraction)}}}"
-    return sign + rf"\d{{{len(body)}}}"
-
-
-def text_shape(value: str) -> str:
-    categories: list[list[Any]] = []
-    for character in value:
-        if character.isalpha():
-            category = r"[A-Za-z]" if character.isascii() else r"[^\W\d_]"
-        elif character.isdigit():
-            category = r"\d"
-        elif character.isspace():
-            category = r"\s"
-        else:
-            category = re.escape(character)
-        if categories and categories[-1][0] == category:
-            categories[-1][1] += 1
-        else:
-            categories.append([category, 1])
-    return "".join(category if count == 1 else f"{category}{{{count}}}" for category, count in categories)
-
-
-def infer_oracle(column: str, values: list[str], generation: dict[str, Any]) -> dict[str, Any]:
-    observed = sorted({value for value in values if not is_ignored(value)})
-    common = {"column": column, "accepts_empty": False, "empty_policy": "rejected"}
-    if not observed:
-        raise ValueError(f"column {column!r} contains no non-empty values")
-    numeric = all(INTEGER.fullmatch(value) or DECIMAL.fullmatch(value) for value in observed)
-    if numeric:
-        if len(observed) <= generation["numeric_enum_max_distinct"]:
-            return {**common, "type": "enum", "values": observed}
-        shapes = sorted({numeric_shape(value) for value in observed})
-        return {**common, "type": "regex", "regex": "^(?:" + "|".join(shapes) + ")$", "shapes": shapes}
-    if len(observed) <= generation["text_enum_max_distinct"]:
-        return {**common, "type": "enum", "values": observed}
-    shapes = sorted({text_shape(value) for value in observed})
-    if len(shapes) != 1:
-        raise ValueError(f"column {column!r} has ambiguous textual formats")
-    return {**common, "type": "regex", "regex": f"^(?:{shapes[0]})$", "shapes": shapes}
-
-
 def predicate(spec: dict[str, Any]) -> Callable[[str], bool]:
     if spec.get("type") == "enum":
         allowed = set(spec["values"])
@@ -116,7 +66,7 @@ def predicate(spec: dict[str, Any]) -> Callable[[str], bool]:
 
 def refresh_oracles(manifest: dict[str, Any]) -> dict[str, Any]:
     """Refresh derived shapes while preserving manually curated oracle rules."""
-    for spec in manifest["oracles"]:
+    for spec in manifest["oracles"].values():
         predicate(spec)  # Validate types and regular expressions before writing.
         if spec["type"] == "regex":
             expression = spec["regex"]
@@ -159,9 +109,9 @@ def corrupt_value(source: str, accepts: Callable[[str], bool], rng: random.Rando
 def select_corruptions(original, specs, eligible, count, rng):
     """Redraw unsafe cell selections while retaining every observed enum value."""
     remaining = {
-        spec["column"]: Counter(row[spec["column"]] for row in original
-                                if not is_ignored(row[spec["column"]]))
-        for spec in specs if spec["type"] == "enum"
+        column: Counter(row[column] for row in original
+                        if not is_ignored(row[column]))
+        for column, spec in specs.items() if spec["type"] == "enum"
     }
     required = sum(len(values) for values in remaining.values())
     if count > len(eligible) - required:
@@ -218,8 +168,6 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
     if type(missing_rate) not in (int, float) or not 0 <= missing_rate <= 1:
         raise ValueError("generation.missing_rate must be between 0 and 1")
     generation["corruption_rate"] = corruption_rate
-    oracle_config = read_json(HERE / "oracles" / "config.json")
-    generation.update(oracle_config)
     output_root = HERE / output_name
     dataset_root = (HERE / config["datasets_root"]).resolve()
     for dataset_name in dataset_names:
@@ -228,11 +176,11 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
         count = min(generation["max_rows"], len(all_rows))
         source_indices = rng.sample(range(len(all_rows)), count)
         original = [dict(all_rows[index]) for index in source_indices]
-        manifest = refresh_oracles(read_json(HERE / "oracles" / dataset_name / "oracles.json"))
+        oracle_path = HERE / "oracles" / f"{dataset_name}.json"
+        manifest = refresh_oracles(read_json(oracle_path))
         specs = manifest["oracles"]
-        if [spec["column"] for spec in specs] != columns:
+        if list(specs) != columns:
             raise ValueError(f"oracle columns do not match dataset: {dataset_name}")
-        by_column = {item["column"]: item for item in specs}
         eligible = [(row, column) for row in range(count) for column in columns if not is_ignored(original[row][column])]
         total_corruption_count = round(len(eligible) * generation["corruption_rate"])
         missing_count = round(total_corruption_count * missing_rate)
@@ -253,7 +201,7 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
             })
         for row, column in selected:
             source = original[row][column]
-            dirty, edits = corrupt_value(source, predicate(by_column[column]), rng,
+            dirty, edits = corrupt_value(source, predicate(specs[column]), rng,
                                         generation["min_edits_per_cell"], generation["max_edits_per_cell"])
             corrupted[row][column] = dirty
             corruptions.append({
@@ -265,9 +213,6 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
         destination = output_root / dataset_name
         write_csv(destination / "original.csv", columns, original)
         write_csv(destination / "corrupted.csv", columns, corrupted)
-        oracle_path = (HERE / "oracles" / dataset_name / "oracles.json"
-                       if output_name in config["output_roots"].values()
-                       else destination / "oracles.json")
         write_json(oracle_path, manifest)
         write_json(destination / "case.json", {
             "schema_version": 1, "dataset": dataset_name, "seed": generation["seed"],
@@ -277,7 +222,7 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
             "character_corrupted_cell_count": len(selected),
             "missing_cell_count": len(missing_cells),
             "category_preservation_redraws": redraws,
-            "oracle_manifest": Path(os.path.relpath(oracle_path, destination)).as_posix(), "generation": generation,
+            "generation": generation,
             "run_metadata": config.get("run_metadata", {}), "corruptions": corruptions,
         })
         print(
@@ -289,17 +234,14 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
 
 def oracle_manifest(case_dir: Path) -> Path:
     case = read_json(case_dir / "case.json")
-    manifest = case_dir / case.get("oracle_manifest", "oracles.json")
-    if manifest.is_file():
-        return manifest
-    return reference_dir(case_dir) / "oracles.json"
+    return HERE / "oracles" / f"{case['dataset']}.json"
 
 
 def reference_dir(case_dir: Path) -> Path:
     if case_dir.parent.name not in {"generated-50", "generated-90"}:
         return case_dir
     shared = case_dir.parents[1] / "shared-generation" / case_dir.name
-    if (shared / "original.csv").is_file() and (shared / "oracles.json").is_file():
+    if (shared / "original.csv").is_file():
         return shared
     return case_dir
 
@@ -335,7 +277,7 @@ def evaluate(case_dir: Path, repaired_path: Path, telemetry_path: Path | None,
         raise ValueError("repaired CSV headers or column order do not match original.csv")
     if len(repaired) != len(original):
         raise ValueError("repaired CSV row count does not match original.csv")
-    specs = {item["column"]: item for item in read_json(oracle_manifest(case_dir))["oracles"]}
+    specs = read_json(oracle_manifest(case_dir))["oracles"]
     telemetry = read_json(telemetry_path) if telemetry_path and telemetry_path.is_file() else None
     timed = {}
     if telemetry:
@@ -451,10 +393,8 @@ def regenerate_benchmarks() -> None:
 
 
 def case_artifact(root: Path, output_name: str, dataset: str, filename: str) -> Path:
-    if filename == "oracles.json":
-        return oracle_manifest(root / output_name / dataset)
     if output_name in {"generated-50", "generated-90"} and filename in {
-        "original.csv", "oracles.json",
+        "original.csv",
     }:
         shared = root / "shared-generation" / dataset / filename
         if shared.is_file():
@@ -465,9 +405,6 @@ def case_artifact(root: Path, output_name: str, dataset: str, filename: str) -> 
 def artifact_digest(path: Path, filename: str) -> bytes:
     if filename == "case.json":
         case = read_json(path)
-        # The manifest path is layout metadata; the oracle content is compared
-        # separately and may live in a suite-local shared-generation directory.
-        case.pop("oracle_manifest", None)
         payload = json.dumps(case, sort_keys=True, ensure_ascii=False).encode("utf-8")
         return hashlib.sha256(payload).digest()
     return hashlib.sha256(path.read_bytes()).digest()
@@ -492,7 +429,7 @@ def validate_case_set(output_name: str, dataset_names: tuple[str, ...],
         coordinates = [(item["row"], item["column"]) for item in case["corruptions"]]
         if len(coordinates) != len(set(coordinates)):
             raise ValueError(f"overlapping corruptions: {output_name}/{dataset}")
-        for filename in ("original.csv", "corrupted.csv", "case.json", "oracles.json"):
+        for filename in ("original.csv", "corrupted.csv", "case.json"):
             expected = artifact_digest(
                 case_artifact(HERE, output_name, dataset, filename), filename,
             )

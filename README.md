@@ -1,14 +1,64 @@
 # Sherma-JEV
 
+## Requirements
+
+- Python 3.10 or newer. Sherma itself is Python and does not need compilation.
+- CMake 3.20 or newer and a C++20 compiler for compiling dataset oracles.
+- A Typesafe API key for JEV candidate selection.
+
 ## Setup
 
 ```console
 python -m pip install -r requirements.txt
 ```
 
-Set `TYPESAFE_API_KEY` in the environment or in `.env` beside this README.
+Set `TYPESAFE_API_KEY` in the environment, or create `.env` beside this README:
 
-## Run
+```dotenv
+TYPESAFE_API_KEY=your-api-key
+```
+
+## Build Sherma
+
+There is no native compilation step for Sherma. After setup, run the Python
+entry point directly as shown below. Only the external dataset oracles are
+compiled.
+
+## Compile an oracle
+
+Each file in `test-case-generator-tool/oracles/` is the complete oracle
+manifest for one dataset. Compile it with `oracle/build.py`; the build script
+generates the embedded manifest and invokes CMake for you.
+
+On Linux or macOS:
+
+```console
+python oracle/build.py test-case-generator-tool/oracles/adult_20.json build/oracles/adult_20
+```
+
+On Windows, the output must end in `.exe`:
+
+```console
+python oracle/build.py test-case-generator-tool/oracles/adult_20.json build/oracles/adult_20.exe
+```
+
+Repeat the command with another `<dataset>.json` file to build that dataset's
+oracle. One executable serves every column in its dataset; do not build
+per-column executables.
+
+The manifest is a strict build input containing exactly `dataset`, `source`,
+and an `oracles` object keyed by column name. Each rule is either an `enum`
+with `values`, or a `regex` with `regex` and `shapes`. Empty strings and `?`
+are always rejected. The resulting executable embeds every rule and does not
+read the manifest at runtime.
+
+Sherma sends the executable `{"column":"age","candidates":["42","?"]}` on
+standard input and expects an ordered JSON boolean array such as `[true,false]`
+on standard output. Each request runs in a separate process.
+
+## Run Sherma
+
+Sherma does not inspect the oracle manifest. Pass only the compiled executable:
 
 ```console
 python algorithm/sherma.py \
@@ -16,10 +66,13 @@ python algorithm/sherma.py \
   --ground-truth original.csv \
   --schema schema.json \
   --config algorithm-config.json \
-  --oracles-dir compiled-oracles \
+  --oracle build/oracles/adult_20 \
   --output output.csv \
   --telemetry telemetry.json
 ```
+
+Use `build/oracles/adult_20.exe` for `--oracle` on Windows. The input CSV,
+ground-truth CSV, and schema must have the same columns and row count.
 
 ## Configuration
 
@@ -50,14 +103,34 @@ fields that support it.
 - `limits.max_queue_size`: maximum repair-search queue size; positive or `-1`.
 - `limits.max_rsr_candidates`: maximum RSR candidates; positive or `-1`.
 
-## Test
+## Run the test cases
+
+The test runner first runs the unit tests, compiles one oracle per selected
+dataset, and then passes those executables to Sherma. No separately compiled
+oracle is required.
+
+Run the one-case smoke suite:
 
 ```console
-python -m unittest discover -s . -p "test_*.py"
 python test_suite.py smoke
+```
+
+Run all eight bundled cases:
+
+```console
 python test_suite.py test
+```
+
+The equivalent Make targets are:
+
+```console
 make smoke
 make test
+```
+
+Remove generated test artifacts with:
+
+```console
 make clean
 ```
 
@@ -74,10 +147,10 @@ To add a new dataset:
 
 1. Create `test-case-generator-tool/datasets/<dataset-name>/clean.csv`. The CSV
    must have a header with unique, non-empty column names.
-2. Create `test-case-generator-tool/oracles/<dataset-name>/oracles.json`. Its `oracles` array
-   must contain one entry per CSV column, in header order. Use an existing
+2. Create `test-case-generator-tool/oracles/<dataset-name>.json`. Its `oracles` object
+   must contain one entry per CSV column, keyed by column name. Use an existing
    manifest as a template; each entry defines either an accepted `regex` or an
-   `enum` with its accepted `values`.
+   `enum` with its accepted `values`. Empty strings and `?` are always rejected.
 3. Add `<dataset-name>` to the `DATASETS` tuple near the top of
    `test-case-generator-tool/benchmark.py`.
 4. Adjust `test-case-generator-tool/config.json` if needed. `max_rows` controls the sampled

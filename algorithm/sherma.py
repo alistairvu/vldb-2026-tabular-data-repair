@@ -60,8 +60,9 @@ def is_missing(value: str) -> bool:
 
 
 class ExternalOracle(Oracle):
-    def __init__(self, executable: Path) -> None:
+    def __init__(self, executable: Path, column: str) -> None:
         self.executable = executable
+        self.column = column
         self.calls = 0
         self.candidates_submitted = 0
         self.cache: dict[str, bool] = {}
@@ -70,32 +71,18 @@ class ExternalOracle(Oracle):
                       deadline: float | None = None) -> list[bool]:
         if not values:
             return []
-        result: list[bool] = []
-        position = 0
-        while position < len(values):
+        unknown = list(dict.fromkeys(value for value in values if value not in self.cache))
+        if unknown:
             if deadline is not None and time.monotonic() >= deadline:
                 raise RuntimeError("cell timeout")
-            value = values[position]
-            if value in self.cache:
-                accepted = self.cache[value]
-                result.append(accepted)
-                position += 1
-                if accepted:
-                    break
-                continue
-            unknown: list[str] = []
-            while position + len(unknown) < len(values):
-                candidate = values[position + len(unknown)]
-                if candidate in self.cache:
-                    break
-                unknown.append(candidate)
             self.calls += 1
             self.candidates_submitted += len(unknown)
             timeout = None if deadline is None else max(0, deadline - time.monotonic())
             try:
                 response = subprocess.run(
                     [str(self.executable)],
-                    input=json.dumps(unknown, separators=(",", ":")),
+                    input=json.dumps({"column": self.column, "candidates": unknown},
+                                     separators=(",", ":")),
                     text=True, capture_output=True, check=False, timeout=timeout,
                 )
             except subprocess.TimeoutExpired as error:
@@ -106,21 +93,13 @@ class ExternalOracle(Oracle):
                 answers = json.loads(response.stdout)
             except json.JSONDecodeError as error:
                 raise RuntimeError(f"invalid oracle JSON: {error}") from error
-            if (not isinstance(answers, list) or not answers or
-                    len(answers) > len(unknown)):
-                raise RuntimeError(
-                    "oracle result count mismatch: expected a non-empty boolean prefix")
+            if not isinstance(answers, list) or len(answers) != len(unknown):
+                raise RuntimeError("oracle result count mismatch")
             if any(type(item) is not bool for item in answers):
                 raise RuntimeError("oracle result is not boolean")
-            if len(answers) < len(unknown) and not answers[-1]:
-                raise RuntimeError("oracle stopped before accepting a candidate")
             for candidate, accepted in zip(unknown, answers):
                 self.cache[candidate] = accepted
-            result.extend(answers)
-            position += len(answers)
-            if answers[-1]:
-                break
-        return result
+        return [self.cache[value] for value in values]
 
 
 def _object(value: object, context: str) -> dict[str, object]:
@@ -365,19 +344,22 @@ def select_row_with_jev(columns: list[str], descriptions: dict[str, str],
     return selections
 
 
-def oracle_path(root: Path, column: int) -> Path:
-    suffix = ".exe" if os.name == "nt" else ""
-    path = root / f"oracle_{column:03d}{suffix}"
+def oracle_path(path: Path) -> Path:
     if not path.is_file():
         raise RuntimeError(f"missing oracle: {path}")
     return path.resolve()
 
 
+def _query_oracle(oracle: Oracle, values: Sequence[str],
+                  deadline: float | None = None) -> list[bool]:
+    result = oracle.accepts_batch(values, deadline)
+    if len(result) != len(values) or any(type(item) is not bool for item in result):
+        raise RuntimeError("oracle query did not return one boolean per candidate")
+    return result
+
+
 def _singleton(oracle: Oracle, value: str, deadline: float | None = None) -> bool:
-    result = oracle.accepts_batch([value], deadline)
-    if len(result) != 1 or type(result[0]) is not bool:
-        raise RuntimeError("singleton oracle query did not return one boolean")
-    return result[0]
+    return _query_oracle(oracle, [value], deadline)[0]
 
 
 def _measurement_fields(measurements: AlgorithmMeasurements) -> dict[str, object]:
@@ -430,7 +412,7 @@ def _read_candidate_sets(path: Path, columns: list[str], row_count: int
 
 
 def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
-                  config_path: Path, oracles_dir: Path, output_path: Path,
+                  config_path: Path, oracle_executable: Path, output_path: Path,
                   telemetry_path: Path) -> None:
     started = time.monotonic()
     candidate_path = candidate_output_path(output_path)
@@ -468,22 +450,28 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
         candidate_stream = candidate_path.open("a", newline="", encoding="utf-8")
     except OSError as error:
         raise RuntimeError(f"cannot write candidate CSV: {candidate_path}") from error
+    executable = oracle_path(oracle_executable)
     with candidate_stream:
         writer = csv.writer(candidate_stream, lineterminator="\n")
         for column, name in enumerate(columns):
             column_started = time.monotonic()
-            oracle = ExternalOracle(oracle_path(oracles_dir, column))
+            oracle = ExternalOracle(executable, name)
             accepted_values: set[str] = set()
             rejected_order: list[str] = []
             occurrences: dict[str, list[int]] = {}
+            distinct = list(dict.fromkeys(
+                values[column] for values in source_rows
+                if not is_missing(values[column])))
+            initial_answers = _query_oracle(
+                oracle, distinct, time.monotonic() + config.cell_timeout_seconds)
+            initially_accepted = dict(zip(distinct, initial_answers))
             for row, values in enumerate(source_rows):
                 value = values[column]
                 if is_missing(value):
                     states[row][column].sherma_outcome = "sherma_skipped_missing"
                     states[row][column].unresolved_reason = "missing_input"
                     completed += 1
-                elif _singleton(
-                        oracle, value, time.monotonic() + config.cell_timeout_seconds):
+                elif initially_accepted[value]:
                     states[row][column].sherma_outcome = "sherma_valid"
                     accepted_values.add(value)
                     accepted_counts[column][value] += 1
@@ -663,7 +651,7 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
 
 
 def run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
-                 config_path: Path, oracles_dir: Path, output_path: Path,
+                 config_path: Path, oracle_executable: Path, output_path: Path,
                  telemetry_path: Path) -> None:
     log_path = output_path.parent / "error.log"
     try:
@@ -671,7 +659,7 @@ def run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
         telemetry_path.unlink(missing_ok=True)
         log_path.unlink(missing_ok=True)
         _run_pipeline(input_path, ground_truth_path, schema_path, config_path,
-                      oracles_dir, output_path, telemetry_path)
+                      oracle_executable, output_path, telemetry_path)
     except Exception as error:
         for path in (output_path, telemetry_path):
             try:
@@ -694,13 +682,13 @@ def main() -> int:
     parser.add_argument("--ground-truth", type=Path, required=True)
     parser.add_argument("--schema", type=Path, required=True)
     parser.add_argument("--config", type=Path, required=True)
-    parser.add_argument("--oracles-dir", type=Path, required=True)
+    parser.add_argument("--oracle", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=Path("output.csv"))
     parser.add_argument("--telemetry", type=Path, required=True)
     args = parser.parse_args()
     try:
         run_pipeline(args.input, args.ground_truth, args.schema, args.config,
-                     args.oracles_dir, args.output, args.telemetry)
+                     args.oracle, args.output, args.telemetry)
         return 0
     except Exception as error:
         print(f"sherma: {error}", file=sys.stderr)

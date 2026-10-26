@@ -39,11 +39,8 @@ These count logical examples, not container copies or bytes. Each suite writes
 (including smoke), plus the contributing benchmark paths. Legacy measurements
 remain null until rerun. `benchmarks` also refreshes these summaries.
 
-The 50% and 90% cases share oracle manifests in `oracles/<dataset>/oracles.json`,
-referenced by each case's `oracle_manifest`. Oracle inference thresholds live in
-`oracles/config.json`; corruption and sampling settings remain in `config.json`.
-Manifests are manually curated: `generate` preserves their regexes and enum values,
-refreshes `shapes` from each regex, and regenerates cases using those rules.
-Inference thresholds remain available for initial oracle inference; generation
-does not infer over manual edits. The smoke case receives a local copy of the
-curated adult oracle.
+Every generated case uses the single dataset manifest at `oracles/<dataset>.json`.
+Corruption and sampling settings live in `config.json`. Manifests are manually
+curated: `generate` preserves their regexes and enum values, refreshes `shapes`
+from each regex, and regenerates cases using those rules. It never infers or
+replaces oracle rules. Smoke and full cases use the same manifest.

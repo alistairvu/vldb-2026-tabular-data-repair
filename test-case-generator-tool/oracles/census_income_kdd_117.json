@@ -1,23 +1,15 @@
 {
-  "schema_version": 2,
   "dataset": "census_income_kdd_117",
   "source": "clean.csv",
-  "empty_policy": "rejected",
-  "oracles": [
-    {
-      "column": "AAGE",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+  "oracles": {
+    "AAGE": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "ACLSWKR",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "ACLSWKR": {
       "type": "enum",
       "values": [
         " Federal government",
@@ -31,30 +23,21 @@
         " Without pay"
       ]
     },
-    {
-      "column": "ADTINK",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "ADTINK": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "ADTOCC",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "ADTOCC": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "AHGA",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AHGA": {
       "type": "enum",
       "values": [
         " 10th grade",
@@ -76,10 +59,7 @@
         " Some college but no degree"
       ]
     },
-    {
-      "column": "AHSCOL",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AHSCOL": {
       "type": "enum",
       "values": [
         " College or university",
@@ -87,10 +67,7 @@
         " Not in universe"
       ]
     },
-    {
-      "column": "AMARITL",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AMARITL": {
       "type": "enum",
       "values": [
         " Divorced",
@@ -102,10 +79,7 @@
         " Widowed"
       ]
     },
-    {
-      "column": "AMJIND",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AMJIND": {
       "type": "enum",
       "values": [
         " Agriculture",
@@ -132,10 +106,7 @@
         " Wholesale trade"
       ]
     },
-    {
-      "column": "AMJOCC",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AMJOCC": {
       "type": "enum",
       "values": [
         " Adm support including clerical",
@@ -154,10 +125,7 @@
         " Transportation and material moving"
       ]
     },
-    {
-      "column": "ARACE",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "ARACE": {
       "type": "enum",
       "values": [
         " Amer Indian Aleut or Eskimo",
@@ -167,10 +135,7 @@
         " White"
       ]
     },
-    {
-      "column": "AREORGN",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AREORGN": {
       "type": "enum",
       "values": [
         " All other",
@@ -184,20 +149,14 @@
         " Puerto Rican"
       ]
     },
-    {
-      "column": "ASEX",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "ASEX": {
       "type": "enum",
       "values": [
         " Female",
         " Male"
       ]
     },
-    {
-      "column": "AUNMEM",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AUNMEM": {
       "type": "enum",
       "values": [
         " No",
@@ -205,10 +164,7 @@
         " Yes"
       ]
     },
-    {
-      "column": "AUNTYPE",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AUNTYPE": {
       "type": "enum",
       "values": [
         " Job leaver",
@@ -219,10 +175,7 @@
         " Re-entrant"
       ]
     },
-    {
-      "column": "AWKSTAT",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AWKSTAT": {
       "type": "enum",
       "values": [
         " Children or Armed Forces",
@@ -235,40 +188,28 @@
         " Unemployed part- time"
       ]
     },
-    {
-      "column": "CAPGAIN",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "CAPGAIN": {
       "type": "regex",
       "regex": "^\\d{1,5}$",
       "shapes": [
         "\\d{1,5}"
       ]
     },
-    {
-      "column": "GAPLOSS",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "GAPLOSS": {
       "type": "regex",
       "regex": "^\\d{1,4}$",
       "shapes": [
         "\\d{1,4}"
       ]
     },
-    {
-      "column": "DIVVAL",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "DIVVAL": {
       "type": "regex",
       "regex": "^\\d{1,5}$",
       "shapes": [
         "\\d{1,5}"
       ]
     },
-    {
-      "column": "FILESTAT",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "FILESTAT": {
       "type": "enum",
       "values": [
         " Head of household",
@@ -279,10 +220,7 @@
         " Single"
       ]
     },
-    {
-      "column": "GRINREG",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "GRINREG": {
       "type": "enum",
       "values": [
         " Abroad",
@@ -293,10 +231,7 @@
         " West"
       ]
     },
-    {
-      "column": "GRINST",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "GRINST": {
       "type": "enum",
       "values": [
         " Abroad",
@@ -330,10 +265,7 @@
         " Wyoming"
       ]
     },
-    {
-      "column": "HHDFMX",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "HHDFMX": {
       "type": "enum",
       "values": [
         " Child 18+ ever marr Not in a subfamily",
@@ -360,10 +292,7 @@
         " Spouse of householder"
       ]
     },
-    {
-      "column": "HHDREL",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "HHDREL": {
       "type": "enum",
       "values": [
         " Child 18 or older",
@@ -375,20 +304,14 @@
         " Spouse of householder"
       ]
     },
-    {
-      "column": "MARSUPWRT",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "MARSUPWRT": {
       "type": "regex",
       "regex": "^\\d{1,4}\\.\\d{1,2}$",
       "shapes": [
         "\\d{1,4}\\.\\d{1,2}"
       ]
     },
-    {
-      "column": "MIGMTR1",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "MIGMTR1": {
       "type": "enum",
       "values": [
         " Abroad to MSA",
@@ -402,10 +325,7 @@
         " Not in universe"
       ]
     },
-    {
-      "column": "MIGMTR3",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "MIGMTR3": {
       "type": "enum",
       "values": [
         " Abroad",
@@ -418,10 +338,7 @@
         " Same county"
       ]
     },
-    {
-      "column": "MIGMTR4",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "MIGMTR4": {
       "type": "enum",
       "values": [
         " Abroad",
@@ -435,10 +352,7 @@
         " Same county"
       ]
     },
-    {
-      "column": "MIGSAME",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "MIGSAME": {
       "type": "enum",
       "values": [
         " No",
@@ -446,10 +360,7 @@
         " Yes"
       ]
     },
-    {
-      "column": "MIGSUN",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "MIGSUN": {
       "type": "enum",
       "values": [
         " No",
@@ -457,10 +368,7 @@
         " Yes"
       ]
     },
-    {
-      "column": "NOEMP",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "NOEMP": {
       "type": "enum",
       "values": [
         "0",
@@ -472,10 +380,7 @@
         "6"
       ]
     },
-    {
-      "column": "PARENT",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "PARENT": {
       "type": "enum",
       "values": [
         " Both parents present",
@@ -485,10 +390,7 @@
         " Not in universe"
       ]
     },
-    {
-      "column": "PEFNTVTY",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "PEFNTVTY": {
       "type": "enum",
       "values": [
         " Cambodia",
@@ -527,10 +429,7 @@
         " Vietnam"
       ]
     },
-    {
-      "column": "PEMNTVTY",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "PEMNTVTY": {
       "type": "enum",
       "values": [
         " Canada",
@@ -569,10 +468,7 @@
         " Vietnam"
       ]
     },
-    {
-      "column": "PENATVTY",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "PENATVTY": {
       "type": "enum",
       "values": [
         " Cambodia",
@@ -608,10 +504,7 @@
         " Vietnam"
       ]
     },
-    {
-      "column": "PRCITSHP",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "PRCITSHP": {
       "type": "enum",
       "values": [
         " Foreign born- Not a citizen of U S ",
@@ -621,10 +514,7 @@
         " Native- Born in the United States"
       ]
     },
-    {
-      "column": "SEOTR",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "SEOTR": {
       "type": "enum",
       "values": [
         "0",
@@ -632,10 +522,7 @@
         "2"
       ]
     },
-    {
-      "column": "VETQVA",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "VETQVA": {
       "type": "enum",
       "values": [
         " No",
@@ -643,10 +530,7 @@
         " Yes"
       ]
     },
-    {
-      "column": "VETYN",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "VETYN": {
       "type": "enum",
       "values": [
         "0",
@@ -654,45 +538,33 @@
         "2"
       ]
     },
-    {
-      "column": "WKSWORK",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "WKSWORK": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "AHRSPAY",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "AHRSPAY": {
       "type": "regex",
       "regex": "^\\d{1,4}$",
       "shapes": [
         "\\d{1,4}"
       ]
     },
-    {
-      "column": "year",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "year": {
       "type": "enum",
       "values": [
         "94",
         "95"
       ]
     },
-    {
-      "column": "income",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "income": {
       "type": "enum",
       "values": [
         " 50000+.",
         "-50000"
       ]
     }
-  ]
+  }
 }

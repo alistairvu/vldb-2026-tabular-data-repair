@@ -1,33 +1,22 @@
 {
-  "schema_version": 2,
   "dataset": "support2_880",
   "source": "clean.csv",
-  "empty_policy": "rejected",
-  "oracles": [
-    {
-      "column": "age",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+  "oracles": {
+    "age": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,5}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,5}"
       ]
     },
-    {
-      "column": "sex",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "sex": {
       "type": "enum",
       "values": [
         "female",
         "male"
       ]
     },
-    {
-      "column": "dzgroup",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "dzgroup": {
       "type": "enum",
       "values": [
         "ARF/MOSF w/Sepsis",
@@ -40,10 +29,7 @@
         "MOSF w/Malig"
       ]
     },
-    {
-      "column": "dzclass",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "dzclass": {
       "type": "enum",
       "values": [
         "ARF/MOSF",
@@ -52,10 +38,7 @@
         "Coma"
       ]
     },
-    {
-      "column": "num.co",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "num.co": {
       "type": "enum",
       "values": [
         "0",
@@ -69,10 +52,7 @@
         "8"
       ]
     },
-    {
-      "column": "edu",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "edu": {
       "type": "enum",
       "values": [
         "0.0",
@@ -102,10 +82,7 @@
         "9.0"
       ]
     },
-    {
-      "column": "income",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "income": {
       "type": "enum",
       "values": [
         "$11-$25k",
@@ -114,60 +91,42 @@
         "under $11k"
       ]
     },
-    {
-      "column": "scoma",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "scoma": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "charges",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "charges": {
       "type": "regex",
       "regex": "^\\d{1,7}\\.\\d{1,3}$",
       "shapes": [
         "\\d{1,7}\\.\\d{1,3}"
       ]
     },
-    {
-      "column": "totcst",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "totcst": {
       "type": "regex",
       "regex": "^\\d{1,6}\\.\\d{1,4}$",
       "shapes": [
         "\\d{1,6}\\.\\d{1,4}"
       ]
     },
-    {
-      "column": "totmcst",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "totmcst": {
       "type": "regex",
       "regex": "^\\d{1,6}\\.\\d{1,5}$",
       "shapes": [
         "\\d{1,6}\\.\\d{1,5}"
       ]
     },
-    {
-      "column": "avtisst",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "avtisst": {
       "type": "regex",
       "regex": "^\\d{1,2}\\.\\d{1,6}$",
       "shapes": [
         "\\d{1,2}\\.\\d{1,6}"
       ]
     },
-    {
-      "column": "race",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "race": {
       "type": "enum",
       "values": [
         "asian",
@@ -177,80 +136,56 @@
         "white"
       ]
     },
-    {
-      "column": "sps",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "sps": {
       "type": "regex",
       "regex": "^\\d{1,2}\\.\\d{1,7}$",
       "shapes": [
         "\\d{1,2}\\.\\d{1,7}"
       ]
     },
-    {
-      "column": "aps",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "aps": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "surv2m",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "surv2m": {
       "type": "regex",
       "regex": "^\\d{1,1}\\.\\d{1,9}$",
       "shapes": [
         "\\d{1,1}\\.\\d{1,9}"
       ]
     },
-    {
-      "column": "surv6m",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "surv6m": {
       "type": "regex",
       "regex": "^\\d{1,1}\\.\\d{1,9}$",
       "shapes": [
         "\\d{1,1}\\.\\d{1,9}"
       ]
     },
-    {
-      "column": "hday",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "hday": {
       "type": "regex",
       "regex": "^\\d{1,3}$",
       "shapes": [
         "\\d{1,3}"
       ]
     },
-    {
-      "column": "diabetes",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "diabetes": {
       "type": "enum",
       "values": [
         "0",
         "1"
       ]
     },
-    {
-      "column": "dementia",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "dementia": {
       "type": "enum",
       "values": [
         "0",
         "1"
       ]
     },
-    {
-      "column": "ca",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "ca": {
       "type": "enum",
       "values": [
         "metastatic",
@@ -258,10 +193,7 @@
         "yes"
       ]
     },
-    {
-      "column": "prg2m",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "prg2m": {
       "type": "enum",
       "values": [
         "0.0",
@@ -294,10 +226,7 @@
         "1.0"
       ]
     },
-    {
-      "column": "prg6m",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "prg6m": {
       "type": "enum",
       "values": [
         "0.0",
@@ -343,10 +272,7 @@
         "1e-06"
       ]
     },
-    {
-      "column": "dnr",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "dnr": {
       "type": "enum",
       "values": [
         "dnr after sadm",
@@ -354,160 +280,112 @@
         "no dnr"
       ]
     },
-    {
-      "column": "dnrday",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "dnrday": {
       "type": "regex",
       "regex": "^-?\\d{1,3}\\.\\d{1,1}$",
       "shapes": [
         "-?\\d{1,3}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "meanbp",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "meanbp": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "wblc",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "wblc": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,8}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,8}"
       ]
     },
-    {
-      "column": "hrt",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "hrt": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "resp",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "resp": {
       "type": "regex",
       "regex": "^\\d{1,2}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,2}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "temp",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "temp": {
       "type": "regex",
       "regex": "^\\d{1,2}\\.\\d{1,5}$",
       "shapes": [
         "\\d{1,2}\\.\\d{1,5}"
       ]
     },
-    {
-      "column": "pafi",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "pafi": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,5}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,5}"
       ]
     },
-    {
-      "column": "alb",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "alb": {
       "type": "regex",
       "regex": "^\\d{1,1}\\.\\d{1,7}$",
       "shapes": [
         "\\d{1,1}\\.\\d{1,7}"
       ]
     },
-    {
-      "column": "bili",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "bili": {
       "type": "regex",
       "regex": "^\\d{1,2}\\.\\d{1,8}$",
       "shapes": [
         "\\d{1,2}\\.\\d{1,8}"
       ]
     },
-    {
-      "column": "crea",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "crea": {
       "type": "regex",
       "regex": "^\\d{1,2}\\.\\d{1,8}$",
       "shapes": [
         "\\d{1,2}\\.\\d{1,8}"
       ]
     },
-    {
-      "column": "sod",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "sod": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "ph",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "ph": {
       "type": "regex",
       "regex": "^\\d{1,1}\\.\\d{1,6}$",
       "shapes": [
         "\\d{1,1}\\.\\d{1,6}"
       ]
     },
-    {
-      "column": "glucose",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "glucose": {
       "type": "regex",
       "regex": "^\\d{1,4}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,4}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "bun",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "bun": {
       "type": "regex",
       "regex": "^\\d{1,3}\\.\\d{1,1}$",
       "shapes": [
         "\\d{1,3}\\.\\d{1,1}"
       ]
     },
-    {
-      "column": "urine",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "urine": {
       "type": "regex",
       "regex": "^\\d{1,4}\\.\\d{1,6}$",
       "shapes": [
         "\\d{1,4}\\.\\d{1,6}"
       ]
     },
-    {
-      "column": "adlp",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "adlp": {
       "type": "enum",
       "values": [
         "0.0",
@@ -520,10 +398,7 @@
         "7.0"
       ]
     },
-    {
-      "column": "adls",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "adls": {
       "type": "enum",
       "values": [
         "0.0",
@@ -536,40 +411,28 @@
         "7.0"
       ]
     },
-    {
-      "column": "adlsc",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "adlsc": {
       "type": "regex",
       "regex": "^\\d{1,1}\\.\\d{1,7}$",
       "shapes": [
         "\\d{1,1}\\.\\d{1,7}"
       ]
     },
-    {
-      "column": "death",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "death": {
       "type": "enum",
       "values": [
         "0",
         "1"
       ]
     },
-    {
-      "column": "hospdead",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "hospdead": {
       "type": "enum",
       "values": [
         "0",
         "1"
       ]
     },
-    {
-      "column": "sfdm2",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "sfdm2": {
       "type": "enum",
       "values": [
         "<2 mo. follow-up",
@@ -579,5 +442,5 @@
         "no(M2 and SIP pres)"
       ]
     }
-  ]
+  }
 }

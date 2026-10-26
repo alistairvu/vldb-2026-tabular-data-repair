@@ -1,23 +1,15 @@
 {
-  "schema_version": 2,
   "dataset": "adult_20",
   "source": "clean.csv",
-  "empty_policy": "rejected",
-  "oracles": [
-    {
-      "column": "age",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+  "oracles": {
+    "age": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "workclass",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "workclass": {
       "type": "enum",
       "values": [
         "Federal-gov",
@@ -28,20 +20,14 @@
         "State-gov"
       ]
     },
-    {
-      "column": "fnlwgt",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "fnlwgt": {
       "type": "regex",
       "regex": "^\\d{1,6}$",
       "shapes": [
         "\\d{1,6}"
       ]
     },
-    {
-      "column": "education",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "education": {
       "type": "enum",
       "values": [
         "10th",
@@ -62,10 +48,7 @@
         "Some-college"
       ]
     },
-    {
-      "column": "education-num",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "education-num": {
       "type": "enum",
       "values": [
         "1",
@@ -86,10 +69,7 @@
         "9"
       ]
     },
-    {
-      "column": "marital-status",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "marital-status": {
       "type": "enum",
       "values": [
         "Divorced",
@@ -100,10 +80,7 @@
         "Widowed"
       ]
     },
-    {
-      "column": "occupation",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "occupation": {
       "type": "enum",
       "values": [
         "Adm-clerical",
@@ -121,10 +98,7 @@
         "Transport-moving"
       ]
     },
-    {
-      "column": "relationship",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "relationship": {
       "type": "enum",
       "values": [
         "Husband",
@@ -135,10 +109,7 @@
         "Wife"
       ]
     },
-    {
-      "column": "race",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "race": {
       "type": "enum",
       "values": [
         "Amer-Indian-Eskimo",
@@ -148,50 +119,35 @@
         "White"
       ]
     },
-    {
-      "column": "sex",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "sex": {
       "type": "enum",
       "values": [
         "Female",
         "Male"
       ]
     },
-    {
-      "column": "capital-gain",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "capital-gain": {
       "type": "regex",
       "regex": "^\\d{1,5}$",
       "shapes": [
         "\\d{1,5}"
       ]
     },
-    {
-      "column": "capital-loss",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "capital-loss": {
       "type": "regex",
       "regex": "^\\d{1,5}$",
       "shapes": [
         "\\d{1,5}"
       ]
     },
-    {
-      "column": "hours-per-week",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "hours-per-week": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "native-country",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "native-country": {
       "type": "enum",
       "values": [
         "Canada",
@@ -223,10 +179,7 @@
         "Vietnam"
       ]
     },
-    {
-      "column": "income",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "income": {
       "type": "enum",
       "values": [
         "<=50K",
@@ -235,5 +188,5 @@
         ">50K."
       ]
     }
-  ]
+  }
 }

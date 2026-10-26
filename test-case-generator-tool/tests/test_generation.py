@@ -11,13 +11,13 @@ spec.loader.exec_module(benchmark)
 
 class GenerationTests(unittest.TestCase):
     def test_refresh_preserves_manual_rules_and_matches_shapes(self):
-        manifest = {"oracles": [
-            {"column": "age", "type": "regex", "regex": r"^\d{1,2}$",
-             "shapes": [r"\d{2}"]},
-            {"column": "kind", "type": "enum", "values": ["custom"]},
-        ]}
+        manifest = {"oracles": {
+            "age": {"type": "regex", "regex": r"^\d{1,2}$",
+                    "shapes": [r"\d{2}"]},
+            "kind": {"type": "enum", "values": ["custom"]},
+        }}
         refreshed = benchmark.refresh_oracles(manifest)
-        regex, enum = refreshed["oracles"]
+        regex, enum = refreshed["oracles"].values()
         self.assertEqual(regex["regex"], r"^\d{1,2}$")
         self.assertEqual(enum["values"], ["custom"])
         shape_accepts = benchmark.predicate({"type": "regex", "regex": "|".join(regex["shapes"])})
@@ -27,8 +27,8 @@ class GenerationTests(unittest.TestCase):
     def test_rare_categories_survive_exact_corruption_budget(self):
         rows = [{"category": "rare" if i == 0 else "common", "number": str(i)}
                 for i in range(20)]
-        specs = [{"column": "category", "type": "enum", "values": ["rare", "common"]},
-                 {"column": "number", "type": "regex"}]
+        specs = {"category": {"type": "enum", "values": ["rare", "common"]},
+                 "number": {"type": "regex"}}
         eligible = [(i, col) for i in range(20) for col in rows[i]]
         for seed in range(20):
             selected, _ = benchmark.select_corruptions(rows, specs, eligible, 36, random.Random(seed))
@@ -42,7 +42,7 @@ class GenerationTests(unittest.TestCase):
     def test_impossible_budget_fails(self):
         with self.assertRaisesRegex(ValueError, "too few cells"):
             benchmark.select_corruptions([{"a": "unique"}],
-                [{"column": "a", "type": "enum"}], [(0, "a")], 1, random.Random(0))
+                {"a": {"type": "enum"}}, [(0, "a")], 1, random.Random(0))
 
     def test_peaks_are_maxima_not_sums(self):
         self.assertEqual(benchmark.example_peaks({

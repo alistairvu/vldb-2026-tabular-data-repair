@@ -13,4 +13,4 @@ test:
 	$(PYTHON) test_suite.py test
 
 clean:
-	rm -rf test-results __pycache__ algorithm/__pycache__
+	rm -rf test-results __pycache__ algorithm/__pycache__ oracle/__pycache__

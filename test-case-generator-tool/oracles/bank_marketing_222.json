@@ -1,23 +1,15 @@
 {
-  "schema_version": 2,
   "dataset": "bank_marketing_222",
   "source": "clean.csv",
-  "empty_policy": "rejected_and_imputed",
-  "oracles": [
-    {
-      "column": "age",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+  "oracles": {
+    "age": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "job",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "job": {
       "type": "enum",
       "values": [
         "admin.",
@@ -33,10 +25,7 @@
         "unemployed"
       ]
     },
-    {
-      "column": "marital",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "marital": {
       "type": "enum",
       "values": [
         "divorced",
@@ -44,10 +33,7 @@
         "single"
       ]
     },
-    {
-      "column": "education",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "education": {
       "type": "enum",
       "values": [
         "primary",
@@ -55,60 +41,42 @@
         "tertiary"
       ]
     },
-    {
-      "column": "default",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "default": {
       "type": "enum",
       "values": [
         "no",
         "yes"
       ]
     },
-    {
-      "column": "balance",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "balance": {
       "type": "regex",
       "regex": "^-?\\d{1,5}$",
       "shapes": [
         "-?\\d{1,5}"
       ]
     },
-    {
-      "column": "housing",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "housing": {
       "type": "enum",
       "values": [
         "no",
         "yes"
       ]
     },
-    {
-      "column": "loan",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "loan": {
       "type": "enum",
       "values": [
         "no",
         "yes"
       ]
     },
-    {
-      "column": "contact",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "contact": {
       "type": "enum",
       "values": [
         "cellular",
         "telephone"
       ]
     },
-    {
-      "column": "day_of_week",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "day_of_week": {
       "type": "enum",
       "values": [
         "1",
@@ -144,10 +112,7 @@
         "9"
       ]
     },
-    {
-      "column": "month",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "month": {
       "type": "enum",
       "values": [
         "apr",
@@ -164,50 +129,35 @@
         "sep"
       ]
     },
-    {
-      "column": "duration",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "duration": {
       "type": "regex",
       "regex": "^\\d{1,4}$",
       "shapes": [
         "\\d{1,4}"
       ]
     },
-    {
-      "column": "campaign",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "campaign": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "pdays",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "pdays": {
       "type": "regex",
       "regex": "^-?\\d{1,3}$",
       "shapes": [
         "-?\\d{1,3}"
       ]
     },
-    {
-      "column": "previous",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "previous": {
       "type": "regex",
       "regex": "^\\d{1,2}$",
       "shapes": [
         "\\d{1,2}"
       ]
     },
-    {
-      "column": "poutcome",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "poutcome": {
       "type": "enum",
       "values": [
         "failure",
@@ -215,15 +165,12 @@
         "success"
       ]
     },
-    {
-      "column": "y",
-      "accepts_empty": false,
-      "empty_policy": "rejected",
+    "y": {
       "type": "enum",
       "values": [
         "no",
         "yes"
       ]
     }
-  ]
+  }
 }

@@ -5,3 +5,4 @@ test-results/
 build/**
 output.*.csv
 error.log
+output.csv

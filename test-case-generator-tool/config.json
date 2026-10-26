@@ -2,21 +2,19 @@
   "datasets_root": "datasets",
   "output_roots": {
     "50": "generated-50",
-    "90": "generated-90"
+    "90": "generated-90",
+    "20": "generated-20"
   },
   "generation": {
     "seed": 0,
     "max_rows": 1000,
-    "corruption_rates": [
-      0.5,
-      0.9
-    ],
+    "corruption_rates": [0.2, 0.5, 0.9],
     "missing_rate": 0.1,
     "min_edits_per_cell": 1,
     "max_edits_per_cell": 5
   },
   "smoke": {
-    "dataset": "adult_20",
+    "dataset": "openpowerlifting",
     "rows": 100,
     "corruption_rate": 0.5,
     "output_root": "generated-smoke"

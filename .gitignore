@@ -2,3 +2,4 @@ __pycache__/
 *.tmp
 test-results/
 .env
+scripts/clean_file.py

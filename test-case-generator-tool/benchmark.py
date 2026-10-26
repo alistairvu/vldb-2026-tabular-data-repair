@@ -17,10 +17,21 @@ from typing import Any, Callable
 
 HERE = Path(__file__).resolve().parent
 ROOT = Path(__file__).resolve().parents[2] / "test-suites"
-SUITES = tuple(path for path in (ROOT / name for name in (
-    "vldb-gammamax", "vldb-gammamax-dt", "vldb-gammamax-knn", "vldb-gidcl", "vldb-lopster",
-)) if path.is_dir())
-DATASETS = ("adult_20", "bank_marketing_222", "census_income_kdd_117", "support2_880")
+SUITES = tuple(
+    path
+    for path in (
+        ROOT / name
+        for name in (
+            "vldb-gammamax",
+            "vldb-gammamax-dt",
+            "vldb-gammamax-knn",
+            "vldb-gidcl",
+            "vldb-lopster",
+        )
+    )
+    if path.is_dir()
+)
+DATASETS = ("openpowerlifting",)
 IGNORED_VALUES = {"", "?"}
 INSERT_ALPHABET = string.ascii_letters + string.digits + string.punctuation + " "
 
@@ -31,13 +42,17 @@ def read_json(path: Path) -> Any:
 
 def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
 
 
 def read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
     with path.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
-        if reader.fieldnames is None or len(set(reader.fieldnames)) != len(reader.fieldnames):
+        if reader.fieldnames is None or len(set(reader.fieldnames)) != len(
+            reader.fieldnames
+        ):
             raise ValueError(f"invalid CSV header: {path}")
         return list(reader.fieldnames), [dict(row) for row in reader]
 
@@ -60,7 +75,9 @@ def predicate(spec: dict[str, Any]) -> Callable[[str], bool]:
         return lambda value: not is_ignored(value) and value in allowed
     if spec.get("type") == "regex":
         expression = re.compile(spec["regex"])
-        return lambda value: not is_ignored(value) and expression.fullmatch(value) is not None
+        return lambda value: (
+            not is_ignored(value) and expression.fullmatch(value) is not None
+        )
     raise ValueError(f"unsupported oracle type: {spec.get('type')!r}")
 
 
@@ -85,17 +102,35 @@ def apply_edit(value: str, rng: random.Random) -> tuple[str, dict[str, Any]]:
     if operation == "insert":
         position = rng.randrange(len(value) + 1)
         character = rng.choice(INSERT_ALPHABET)
-        return value[:position] + character + value[position:], {"operation": operation, "position": position, "character": character}
+        return value[:position] + character + value[position:], {
+            "operation": operation,
+            "position": position,
+            "character": character,
+        }
     position = rng.randrange(len(value))
     if operation == "delete":
-        return value[:position] + value[position + 1:], {"operation": operation, "position": position, "character": value[position]}
+        return value[:position] + value[position + 1 :], {
+            "operation": operation,
+            "position": position,
+            "character": value[position],
+        }
     choices = INSERT_ALPHABET.replace(value[position], "")
     character = rng.choice(choices)
-    return value[:position] + character + value[position + 1:], {"operation": operation, "position": position, "from": value[position], "to": character}
+    return value[:position] + character + value[position + 1 :], {
+        "operation": operation,
+        "position": position,
+        "from": value[position],
+        "to": character,
+    }
 
 
-def corrupt_value(source: str, accepts: Callable[[str], bool], rng: random.Random,
-                  minimum: int, maximum: int) -> tuple[str, list[dict[str, Any]]]:
+def corrupt_value(
+    source: str,
+    accepts: Callable[[str], bool],
+    rng: random.Random,
+    minimum: int,
+    maximum: int,
+) -> tuple[str, list[dict[str, Any]]]:
     for _ in range(1000):
         value, edits = source, []
         for _ in range(rng.randint(minimum, maximum)):
@@ -115,7 +150,9 @@ def select_corruptions(original, specs, eligible, count, rng):
     }
     required = sum(len(values) for values in remaining.values())
     if count > len(eligible) - required:
-        raise ValueError("corruption count leaves too few cells to preserve every enum value")
+        raise ValueError(
+            "corruption count leaves too few cells to preserve every enum value"
+        )
     candidates = list(eligible)
     rng.shuffle(candidates)
     selected = []
@@ -143,7 +180,11 @@ def generate_cases(rate: int) -> None:
     if selected_rate not in configured_rates:
         raise ValueError(f"corruption rate {selected_rate} is not configured")
     generate_case_set(
-        config, generation, selected_rate, config["output_roots"][str(rate)], DATASETS,
+        config,
+        generation,
+        selected_rate,
+        config["output_roots"][str(rate)],
+        DATASETS,
     )
 
 
@@ -154,14 +195,21 @@ def generate_smoke_case() -> None:
     generation.pop("corruption_rates")
     generation["max_rows"] = smoke["rows"]
     generate_case_set(
-        config, generation, smoke["corruption_rate"], smoke["output_root"],
+        config,
+        generation,
+        smoke["corruption_rate"],
+        smoke["output_root"],
         (smoke["dataset"],),
     )
 
 
-def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
-                      corruption_rate: float, output_name: str,
-                      dataset_names: tuple[str, ...]) -> None:
+def generate_case_set(
+    config: dict[str, Any],
+    generation: dict[str, Any],
+    corruption_rate: float,
+    output_name: str,
+    dataset_names: tuple[str, ...],
+) -> None:
     if type(corruption_rate) not in (int, float) or not 0 <= corruption_rate <= 1:
         raise ValueError("corruption rate must be between 0 and 1")
     missing_rate = generation.get("missing_rate", 0.1)
@@ -185,7 +233,8 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
         total_corruption_count = round(len(eligible) * generation["corruption_rate"])
         missing_count = round(total_corruption_count * missing_rate)
         affected, redraws = select_corruptions(
-            original, specs, eligible, total_corruption_count, rng)
+            original, specs, eligible, total_corruption_count, rng
+        )
         rng.shuffle(affected)
         missing_cells = affected[:missing_count]
         selected = affected[missing_count:]
@@ -194,21 +243,31 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
         for row, column in missing_cells:
             source = original[row][column]
             corrupted[row][column] = ""
-            corruptions.append({
-                "row": row, "column": column, "clean_value": source,
-                "corrupted_value": "", "edits": [{"operation": "set_missing"}],
-                "corruption_type": "missing",
-            })
+            corruptions.append(
+                {
+                    "row": row,
+                    "column": column,
+                    "clean_value": source,
+                    "corrupted_value": "",
+                    "edits": [{"operation": "set_missing"}],
+                    "corruption_type": "missing",
+                }
+            )
         for row, column in selected:
             source = original[row][column]
             dirty, edits = corrupt_value(source, predicate(specs[column]), rng,
                                         generation["min_edits_per_cell"], generation["max_edits_per_cell"])
             corrupted[row][column] = dirty
-            corruptions.append({
-                "row": row, "column": column, "clean_value": source,
-                "corrupted_value": dirty, "edits": edits,
-                "corruption_type": "character_edit",
-            })
+            corruptions.append(
+                {
+                    "row": row,
+                    "column": column,
+                    "clean_value": source,
+                    "corrupted_value": dirty,
+                    "edits": edits,
+                    "corruption_type": "character_edit",
+                }
+            )
         corruptions.sort(key=lambda item: (item["row"], columns.index(item["column"])))
         destination = output_root / dataset_name
         write_csv(destination / "original.csv", columns, original)
@@ -231,7 +290,6 @@ def generate_case_set(config: dict[str, Any], generation: dict[str, Any],
         )
 
 
-
 def oracle_manifest(case_dir: Path) -> Path:
     case = read_json(case_dir / "case.json")
     return HERE / "oracles" / f"{case['dataset']}.json"
@@ -246,15 +304,16 @@ def reference_dir(case_dir: Path) -> Path:
     return case_dir
 
 
-
 EXAMPLE_PEAKS = ("max_positive_examples_stored", "max_negative_examples_stored")
 
 
 def example_peaks(columns: dict[str, Any]) -> dict[str, Any]:
     """Maxima across columns; absent legacy measurements remain unknown."""
-    return {key: max(values) if values and all(v is not None for v in values) else None
-            for key in EXAMPLE_PEAKS
-            for values in [[column.get(key) for column in columns.values()]]}
+    return {
+        key: max(values) if values and all(v is not None for v in values) else None
+        for key in EXAMPLE_PEAKS
+        for values in [[column.get(key) for column in columns.values()]]
+    }
 
 
 def write_example_summary(suite: Path) -> None:
@@ -262,19 +321,27 @@ def write_example_summary(suite: Path) -> None:
     for path in sorted(suite.glob("generated-*/**/benchmark.json")):
         result = read_json(path)
         datasets[str(path.relative_to(suite))] = {
-            key: result["table"].get(key) for key in EXAMPLE_PEAKS}
+            key: result["table"].get(key) for key in EXAMPLE_PEAKS
+        }
     summary = {"schema_version": 1, **example_peaks(datasets), "datasets": datasets}
     (suite / "example-storage-summary.json").write_text(
-        json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+        json.dumps(summary, indent=2) + "\n", encoding="utf-8"
+    )
 
 
-def evaluate(case_dir: Path, repaired_path: Path, telemetry_path: Path | None,
-             algorithm_config: dict[str, Any]) -> dict[str, Any]:
+def evaluate(
+    case_dir: Path,
+    repaired_path: Path,
+    telemetry_path: Path | None,
+    algorithm_config: dict[str, Any],
+) -> dict[str, Any]:
     references = reference_dir(case_dir)
     columns, original = read_csv(references / "original.csv")
     repaired_columns, repaired = read_csv(repaired_path)
     if repaired_columns != columns:
-        raise ValueError("repaired CSV headers or column order do not match original.csv")
+        raise ValueError(
+            "repaired CSV headers or column order do not match original.csv"
+        )
     if len(repaired) != len(original):
         raise ValueError("repaired CSV row count does not match original.csv")
     specs = read_json(oracle_manifest(case_dir))["oracles"]
@@ -285,25 +352,45 @@ def evaluate(case_dir: Path, repaired_path: Path, telemetry_path: Path | None,
         if not isinstance(records, list):
             raise ValueError("telemetry.cells must be an array")
         expected = {
-            (row, column) for row in range(len(original)) for column in columns
-            if telemetry.get("schema_version") == 2 or not is_ignored(original[row][column])
+            (row, column)
+            for row in range(len(original))
+            for column in columns
+            if telemetry.get("schema_version") == 2
+            or not is_ignored(original[row][column])
         }
         for item in records:
             key = (item.get("row"), item.get("column"))
             if key not in expected or key in timed:
-                raise ValueError(f"invalid, duplicate, or unexpected telemetry cell: {key}")
+                raise ValueError(
+                    f"invalid, duplicate, or unexpected telemetry cell: {key}"
+                )
             timed[key] = item
         if set(timed) != expected:
-            raise ValueError(f"telemetry is incomplete: expected {len(expected)}, received {len(timed)} cells")
-    totals = {key: 0 for key in (
-        "cells", "eligible_cells", "oracle_eligible_cells", "exact_eligible_cells",
-        "originally_missing_cells", "oracle_correct", "exact_correct", "timeouts",
-        "knn_imputed", "final_missing", "final_invalid",
-    )}
+            raise ValueError(
+                f"telemetry is incomplete: expected {len(expected)}, received {len(timed)} cells"
+            )
+    totals = {
+        key: 0
+        for key in (
+            "cells",
+            "eligible_cells",
+            "oracle_eligible_cells",
+            "exact_eligible_cells",
+            "originally_missing_cells",
+            "oracle_correct",
+            "exact_correct",
+            "timeouts",
+            "knn_imputed",
+            "final_missing",
+            "final_invalid",
+        )
+    }
     totals["execution_time_seconds"] = 0.0
     per_column = {}
     for column in columns:
-        metric = {key: (0.0 if key == "execution_time_seconds" else 0) for key in totals}
+        metric = {
+            key: (0.0 if key == "execution_time_seconds" else 0) for key in totals
+        }
         accepts = predicate(specs[column])
         for row, clean in enumerate(original):
             output = repaired[row][column]
@@ -322,21 +409,53 @@ def evaluate(case_dir: Path, repaired_path: Path, telemetry_path: Path | None,
                 metric["eligible_cells"] += 1
                 metric["exact_eligible_cells"] += 1
                 metric["exact_correct"] += int(output == clean[column])
-        metric["oracle_accuracy"] = metric["oracle_correct"] / metric["oracle_eligible_cells"] if metric["oracle_eligible_cells"] else None
-        metric["exact_accuracy"] = metric["exact_correct"] / metric["exact_eligible_cells"] if metric["exact_eligible_cells"] else None
-        metric["timeout_rate"] = metric["timeouts"] / metric["exact_eligible_cells"] if telemetry and metric["exact_eligible_cells"] else None
+        metric["oracle_accuracy"] = (
+            metric["oracle_correct"] / metric["oracle_eligible_cells"]
+            if metric["oracle_eligible_cells"]
+            else None
+        )
+        metric["exact_accuracy"] = (
+            metric["exact_correct"] / metric["exact_eligible_cells"]
+            if metric["exact_eligible_cells"]
+            else None
+        )
+        metric["timeout_rate"] = (
+            metric["timeouts"] / metric["exact_eligible_cells"]
+            if telemetry and metric["exact_eligible_cells"]
+            else None
+        )
         if telemetry:
             column_data = telemetry.get("columns", {}).get(column, {})
-            metric["execution_time_seconds"] = float(column_data.get("execution_time_seconds", 0.0))
-            metric["algorithm_counts"] = {key: value for key, value in column_data.items() if key != "execution_time_seconds"}
+            metric["execution_time_seconds"] = float(
+                column_data.get("execution_time_seconds", 0.0)
+            )
+            metric["algorithm_counts"] = {
+                key: value
+                for key, value in column_data.items()
+                if key != "execution_time_seconds"
+            }
         per_column[column] = metric
         for key in totals:
             totals[key] += metric[key]
-    totals["oracle_accuracy"] = totals["oracle_correct"] / totals["oracle_eligible_cells"] if totals["oracle_eligible_cells"] else None
-    totals["exact_accuracy"] = totals["exact_correct"] / totals["exact_eligible_cells"] if totals["exact_eligible_cells"] else None
-    totals["timeout_rate"] = totals["timeouts"] / totals["exact_eligible_cells"] if telemetry and totals["exact_eligible_cells"] else None
+    totals["oracle_accuracy"] = (
+        totals["oracle_correct"] / totals["oracle_eligible_cells"]
+        if totals["oracle_eligible_cells"]
+        else None
+    )
+    totals["exact_accuracy"] = (
+        totals["exact_correct"] / totals["exact_eligible_cells"]
+        if totals["exact_eligible_cells"]
+        else None
+    )
+    totals["timeout_rate"] = (
+        totals["timeouts"] / totals["exact_eligible_cells"]
+        if telemetry and totals["exact_eligible_cells"]
+        else None
+    )
     if telemetry:
-        totals["total_execution_time_seconds"] = float(telemetry["total_execution_time_seconds"])
+        totals["total_execution_time_seconds"] = float(
+            telemetry["total_execution_time_seconds"]
+        )
     for column, metric in per_column.items():
         column_data = telemetry.get("columns", {}).get(column, {}) if telemetry else {}
         for key in EXAMPLE_PEAKS:
@@ -344,9 +463,14 @@ def evaluate(case_dir: Path, repaired_path: Path, telemetry_path: Path | None,
     totals.update(example_peaks(per_column))
     case = read_json(case_dir / "case.json")
     return {
-        "schema_version": 2, "dataset": case["dataset"], "generation": case["generation"],
-        "algorithm": algorithm_config, "run_metadata": case.get("run_metadata", {}),
-        "columns": per_column, "table": totals, "telemetry_supplied": telemetry is not None,
+        "schema_version": 2,
+        "dataset": case["dataset"],
+        "generation": case["generation"],
+        "algorithm": algorithm_config,
+        "run_metadata": case.get("run_metadata", {}),
+        "columns": per_column,
+        "table": totals,
+        "telemetry_supplied": telemetry is not None,
         "validation_failures": [],
     }
 
@@ -366,7 +490,9 @@ def regenerate_benchmarks() -> None:
     for suite in SUITES:
         evaluator = evaluate
         if suite.name.startswith("vldb-gammamax"):
-            spec = importlib.util.spec_from_file_location("suite_evaluator", suite / "evaluator.py")
+            spec = importlib.util.spec_from_file_location(
+                "suite_evaluator", suite / "evaluator.py"
+            )
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             evaluator = module.evaluate
@@ -377,14 +503,19 @@ def regenerate_benchmarks() -> None:
                 case = suite / output_name / dataset
                 located = locate_run(suite, case)
                 if located is None:
-                    print(f"skip {suite.name}/generated-{rate}/{dataset}: no repaired.csv")
+                    print(
+                        f"skip {suite.name}/generated-{rate}/{dataset}: no repaired.csv"
+                    )
                     continue
                 run, repaired, telemetry = located
                 config_path = run / "algorithm-config.json"
                 if not config_path.is_file():
                     config_path = case.parent / "algorithm-config.json"
                 algorithm = read_json(config_path) if config_path.is_file() else {}
-                write_json(run / "benchmark.json", evaluator(case, repaired, telemetry, algorithm))
+                write_json(
+                    run / "benchmark.json",
+                    evaluator(case, repaired, telemetry, algorithm),
+                )
                 count += 1
     for suite in SUITES:
         if suite.name.startswith("vldb-gammamax"):
@@ -410,35 +541,57 @@ def artifact_digest(path: Path, filename: str) -> bytes:
     return hashlib.sha256(path.read_bytes()).digest()
 
 
-def validate_case_set(output_name: str, dataset_names: tuple[str, ...],
-                      corruption_rate: float) -> int:
+def validate_case_set(
+    output_name: str, dataset_names: tuple[str, ...], corruption_rate: float
+) -> int:
     checked = 0
     for dataset in dataset_names:
         canonical = HERE / output_name / dataset
         case = read_json(canonical / "case.json")
-        missing = [item for item in case["corruptions"] if item.get("corruption_type") == "missing"]
-        character = [item for item in case["corruptions"] if item.get("corruption_type") == "character_edit"]
+        missing = [
+            item
+            for item in case["corruptions"]
+            if item.get("corruption_type") == "missing"
+        ]
+        character = [
+            item
+            for item in case["corruptions"]
+            if item.get("corruption_type") == "character_edit"
+        ]
         expected_total = round(case["eligible_cell_count"] * corruption_rate)
         expected_missing = round(expected_total * case["generation"]["missing_rate"])
-        if len(missing) != expected_missing or len(missing) + len(character) != expected_total:
-            raise ValueError(f"corruption allocation differs from configured rates: {output_name}/{dataset}")
-        if len(missing) != case["missing_cell_count"] or any(item["corrupted_value"] != "" for item in missing):
+        if (
+            len(missing) != expected_missing
+            or len(missing) + len(character) != expected_total
+        ):
+            raise ValueError(
+                f"corruption allocation differs from configured rates: {output_name}/{dataset}"
+            )
+        if len(missing) != case["missing_cell_count"] or any(
+            item["corrupted_value"] != "" for item in missing
+        ):
             raise ValueError(f"invalid missing-cell metadata: {output_name}/{dataset}")
         if len(character) != case["character_corrupted_cell_count"]:
-            raise ValueError(f"invalid character-corruption metadata: {output_name}/{dataset}")
+            raise ValueError(
+                f"invalid character-corruption metadata: {output_name}/{dataset}"
+            )
         coordinates = [(item["row"], item["column"]) for item in case["corruptions"]]
         if len(coordinates) != len(set(coordinates)):
             raise ValueError(f"overlapping corruptions: {output_name}/{dataset}")
         for filename in ("original.csv", "corrupted.csv", "case.json"):
             expected = artifact_digest(
-                case_artifact(HERE, output_name, dataset, filename), filename,
+                case_artifact(HERE, output_name, dataset, filename),
+                filename,
             )
             for suite in SUITES:
                 actual = artifact_digest(
-                    case_artifact(suite, output_name, dataset, filename), filename,
+                    case_artifact(suite, output_name, dataset, filename),
+                    filename,
                 )
                 if actual != expected:
-                    raise ValueError(f"suite case differs: {suite.name}/{output_name}/{dataset}/{filename}")
+                    raise ValueError(
+                        f"suite case differs: {suite.name}/{output_name}/{dataset}/{filename}"
+                    )
             checked += 1
     return checked
 
@@ -452,7 +605,9 @@ def validate_cases() -> None:
         checked += validate_case_set(output_name, DATASETS, configured_rate)
     smoke = config["smoke"]
     checked += validate_case_set(
-        smoke["output_root"], (smoke["dataset"],), smoke["corruption_rate"],
+        smoke["output_root"],
+        (smoke["dataset"],),
+        smoke["corruption_rate"],
     )
     print(f"validated {checked} canonical artifacts across {len(SUITES)} suites")
 

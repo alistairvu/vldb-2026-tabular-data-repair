@@ -1,0 +1,38 @@
+2026-10-26T00:40:04.764727+00:00
+PermissionError: [Errno 13] Permission denied: '/Users/alistair/research/vldb-2026-tabular-data-repair/test-case-generator-tool/oracles/openpowerlifting/oracle_000'
+
+Traceback (most recent call last):
+  File "/Users/alistair/research/vldb-2026-tabular-data-repair/algorithm/sherma.py", line 673, in run_pipeline
+    _run_pipeline(input_path, ground_truth_path, schema_path, config_path,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  oracles_dir, output_path, telemetry_path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alistair/research/vldb-2026-tabular-data-repair/algorithm/sherma.py", line 485, in _run_pipeline
+    elif _singleton(
+         ~~~~~~~~~~^
+            oracle, value, time.monotonic() + config.cell_timeout_seconds):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alistair/research/vldb-2026-tabular-data-repair/algorithm/sherma.py", line 377, in _singleton
+    result = oracle.accepts_batch([value], deadline)
+  File "/Users/alistair/research/vldb-2026-tabular-data-repair/algorithm/sherma.py", line 96, in accepts_batch
+    response = subprocess.run(
+        [str(self.executable)],
+        input=json.dumps(unknown, separators=(",", ":")),
+        text=True, capture_output=True, check=False, timeout=timeout,
+    )
+  File "/Users/alistair/.local/share/mise/installs/python/3.14.7/lib/python3.14/subprocess.py", line 555, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alistair/.local/share/mise/installs/python/3.14.7/lib/python3.14/subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alistair/.local/share/mise/installs/python/3.14.7/lib/python3.14/subprocess.py", line 1990, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 13] Permission denied: '/Users/alistair/research/vldb-2026-tabular-data-repair/test-case-generator-tool/oracles/openpowerlifting/oracle_000'

@@ -1,0 +1,101 @@
+Name,Sex,Event,Equipment,Age,AgeClass,BirthYearClass,Division,BodyweightKg,WeightClassKg,Squat1Kg,Squat2Kg,Squat3Kg,Squat4Kg,Best3SquatKg,Bench1Kg,Bench2Kg,Bench3Kg,Bench4Kg,Best3BenchKg,Deadlift1Kg,Deadlift2Kg,Deadlift3Kg,Deadlift4Kg,Best3DeadliftKg,TotalKg,Place,Dots,Wilks,Glossbrenner,Goodlift,Tested,Country,State,Federation,ParentFederation,Date,MeetCountry,MeetState,MeetTown,MeetName
+Gwendal Magueur,M,SBD,Raw,34,24-34,24-39,Seniors,71.8,74,120,-130,130,,130,100,110,115,,115,130,145,150,,150,395,2,291.60,290.41,281.13,58.91,Yes,,,FFForce,IPF,2018-10-20,France,,Woippy,Premier Pas FA PL DC BP Grand Est
+Roland Wilder,M,B,Raw,41,40-44,40-49,Open,104.4,110,,,,,,175,192.5,205,,205,,,,,,205,1,123.92,122.75,117.21,92.04,,USA,PA,WRPF,WRPF,2020-10-17,USA,PA,Allentown,Jacked O' Lantern Classic
+Sergey Ryabykh,M,SBD,Multi-ply,24,24-34,24-39,Pro Open,74,75,200,,215,,215,150,,,,150,190,200,,,200,565,1,408.86,406.41,392.92,70.02,,Russia,,WPC-RUS,WPC,2011-11-19,Russia,KDA,Krasnodar,Fitness Land Cup
+David Raymond,M,SBD,Raw,31,24-34,24-39,MORE,75,75,237.5,255,272.5,,272.5,155,165,170,,170,285,-300,-300,,285,727.5,1,521.92,518.39,500.89,106.06,,USA,,UPA,,2022-11-12,USA,IA,Dubuque,Power Weekend
+Kristy Jank,F,SBD,Raw,23,20-23,,Juniors 20-23,91.4,100,-100,102.5,-107.5,,102.5,42.5,50,-55,,50,102.5,107.5,115,,115,267.5,1,236.88,229.70,199.35,49.01,,USA,NY,USPA,IPL,2023-05-13,USA,NY,Niagara Falls,WNY Powerlifting Championships
+Michel Soranzo,M,B,Raw,61,60-64,60-69,M-M5,81.7,82.5,,,,,,112.5,117.5,120,,120,,,,,,120,2,81.74,80.86,77.84,60.77,Yes,France,,FSFA,WDFPF,2019-11-10,France,,Trilport,National Final
+Sandy Norton,M,SBD,Single-ply,,45-49,,M-M,110,110,,,,,190.51,,,,,136.08,,,,,226.8,553.38,1,327.75,325.66,311.25,55.41,Yes,,,USAPL,IPF,2007-01-20,USA,LA,Baton Rouge,State Championships
+Viktor Abaev,M,SBD,Single-ply,36.5,35-39,24-39,Open,98,100,265,-275,,,265,170,-180,,,170,240,-260,,,240,675,7,419.18,414.21,395.78,71.29,Yes,Russia,,FPR,IPF,1988-02-19,USSR,,Tyumen,USSR Powerlifting Cup
+Kieran McGlinchey,M,SBD,Raw,34,24-34,24-39,M-SR,81.7,82.5,,,,,150,,,,,90,,,,,200,440,1,299.71,296.50,285.42,61.40,Yes,Ireland,,WDFPF,WDFPF,2021-11-27,Ireland,,Castleblaney,European Powerlifting Championships
+Cross #1,M,SBD,Single-ply,,,,Pure,90,90,,,,,230,,,,,170,,,,,230,630,3,407.36,402.19,385.46,69.52,Yes,,,NASA,,1995-01-26,USA,OK,Oklahoma City,Natural Nationals
+Eri Biljana,F,B,Raw,31,24-34,24-39,O,77.1,84,,,,,,60,65,-70,,65,,,,,,65,1,62.40,60.76,53.38,49.69,Yes,,,PLSS,IPF,2022-04-16,Serbia,,,Serbia Open Bench Press
+Diamond Delfierro,F,SBD,Single-ply,,,,Girls,80.74,82.3,,,,,65.77,,,,,43.09,,,,,108.86,217.72,6,204.21,198.21,173.73,34.79,Yes,,,THSWPA,,2016-01-23,USA,TX,Alvin,2nd Annual Yellowjacket Powerlifting Classic
+Roy Reynolds,M,B,Raw,66,65-69,60-69,Masters 65-69,80.8,82.5,,,,,,,,,,112.5,,,,,,112.5,1,77.12,76.33,73.51,57.29,,USA,FL,USPA,IPL,2019-06-22,USA,FL,Navarre,The Megalodon Collision
+Erin Ashbacher,F,SBD,Raw,,,,Open,54.2,57,,,,,90,,,,,70,,,,,115,275,1,325.81,331.95,293.85,67.09,Yes,Canada,AB,CPU,IPF,2013-10-05,Canada,AB,Calgary,Urban Athletic Games
+Valentin Savelyev,M,SBD,Raw,62,60-64,60-69,M_MR_5_WPC,102.2,110,130,150,-170,,150,100,120,-135,,120,160,200,215,,215,485,1,295.77,292.68,279.48,60.64,,Russia,,WPC,WPC,2012-11-06,USA,NV,Las Vegas,World Championships
+James Beckett,M,SBD,Raw,,,,Open,93.6,105,,,,,165,,,,,100,,,,,195,460,4,291.78,288.09,275.67,59.99,Yes,Canada,SK,CPU,IPF,2018-12-22,Canada,SK,Moose Jaw,Last Chance Open
+Nicholas Womble,M,SBD,Raw,20,20-23,19-23,MR-Jr,64.6,66,-175,-175,-175,,,102.5,107.5,-112.5,,107.5,175,182.5,187.5,,187.5,,DQ,,,,,Yes,USA,FL,USAPL,IPF,2013-07-19,USA,FL,Orlando,Raw Nationals
+Tony Turrubiartes,M,SBD,Single-ply,,16-17,,Boys,72.39,74.8,,,,,149.69,,,,,83.91,,,,,163.29,396.89,7,291.40,290.05,280.68,49.90,Yes,,,THSPA,,2015-02-14,USA,TX,Karnes City,Karnes City Invitational
+Evgeniy Burykin,M,B,Raw,29,24-34,24-39,Open,106.7,110,,,,,,147.5,-150,-150,,147.5,,,,,,147.5,4,88.39,87.65,83.72,65.56,Yes,,,RPU,,2017-12-09,Russia,LEN,St. Petersburg,Neva Battle
+Tina LaBlanca,F,SBD,Raw,47,45-49,40-49,Masters 45-49,87.1,90,,,,,100,,,,,60,,,,,120,280,1,253.33,245.41,213.94,52.16,,USA,TX,USPA,IPL,2015-08-22,USA,TX,Austin,Symbolic Muscle Classic
+Andrey Belyaev #1,M,B,Single-ply,28,24-34,24-39,Elite Open,98.4,100,,,,,,310,325,-337.5,,325,,,,,,325,3,201.46,199.10,190.22,104.20,,Russia,,NAP,IPA,2011-03-20,Russia,BA,Ufa,Russian Bench Press Cup
+Jean-Michel Dewitte,M,B,Raw,40,40-44,40-49,Masters 1,58.36,59,,,,,,,,,,105,,,,,,105,1,90.69,91.88,89.86,63.74,Yes,Belgium,,LFPH,IPF,2023-03-04,Belgium,,Seraing,2e Tour Interclub
+Pete Vickery,M,SBD,Single-ply,33.5,24-34,24-39,Open,99.9,100,,,,,245,,,,,177.5,,,,,262.5,685,5,421.81,417.05,398.34,71.67,Yes,Canada,NS,CPU,IPF,2008-04-10,Canada,ON,St Catherines,Canadian Championship
+Bill Whitmore,M,B,Raw,,,,Open,90,90,,,,,,,,,,125,,,,,,125,8,80.83,79.80,76.48,60.27,Yes,,,ADFPA,,1985-04-20,USA,IN,Indianapolis,Indiana State Meet
+Jamie Caprosso,M,SBD,Raw,,,,MR-M1a,98.5,100,,,,,202.5,,,,,182.5,,,,,240,625,1,387.25,382.72,365.64,79.53,Yes,,,USAPL,IPF,2014-09-27,USA,MI,,Kalamazoo Klassic II
+Sam Solomi,M,SBD,Raw,33,24-34,24-39,M_OCR_BPU,158,140+,330,350,365,,365,227.5,-240,-240,,227.5,325,352.5,-365,,352.5,945,1,501.23,519.01,487.80,98.39,,England,,BPU,WPC,2023-04-08,England,,Hereford,Hereford Qualifier
+Alex Lugo,M,SBD,Single-ply,,,,Boys,65.68,67.1,,,,,188.24,,,,,122.47,,,,,197.31,508.02,2,399.49,400.50,389.26,68.28,Yes,,,THSPA,,2017-02-11,USA,TX,Dalhart,Dalhart Invitational
+Mark Petkovich,M,SBD,Single-ply,,,,Open,82.5,82.5,,,,,215,,,,,137.5,,,,,232.5,585,6,396.27,391.90,377.08,67.79,,,,USPF,IPF,1981-03-21,USA,CA,Soquel,Cal State Jr Championships
+Ilya Nikonorov,M,SBD,Raw,20.5,20-23,19-23,Open,73.95,74,,,,,140,,,,,65,,,,,120,325,12,235.29,233.89,226.13,47.73,Yes,,,FPR,IPF,2019-05-10,Russia,IRK,Irkutsk,Irkutsk Oblast Classic Powerlifting Cup & Powerlifting Championships
+Lou Prestipino,M,SBD,Raw,45,45-49,40-49,RM 45-49,89.81,90,,,,,210,,,,,137.5,,,,,227.5,575,1,372.19,367.47,352.22,76.52,Yes,USA,VA,AAU,,2004-10-29,USA,VA,Richmond,Richmond International
+Dylan Soriano,M,SBD,Raw,24,24-34,24-39,MR-O,96.1,105,-185,-185,185,,185,122.5,137.5,-147.5,,137.5,217.5,227.5,235,,235,557.5,2,349.29,345.00,329.83,71.78,Yes,USA,FL,USAPL,IPF,2017-04-22,USA,FL,,Capital City Barbell Raw Powerlifting Championship
+Tod van der Hart,M,B,Single-ply,,,,Novice,75,75,,,,,,,,,,124.74,,,,,,124.74,6,89.49,88.88,85.88,48.02,,,,USPF,IPF,1985-04-20,USA,IA,Des Moines,Drake Relays Bench Press
+Andrey Ivanets,M,SBD,Single-ply,23,20-23,19-23,Open,90,90,,,,,315,,,,,200,,,,,335,850,1,549.61,542.63,520.06,93.80,Yes,Belarus,,FPR,IPF,2007-12-07,Russia,BRY,Suzemka,Bryansk Oblast Powerlifting Cup & Bench Press Championships
+Doug Borden,M,SBD,Single-ply,21.5,20-23,19-23,Open,100,100,,,,,344.73,,,,,192.78,,,,,335.66,873.17,1,537.45,531.40,507.55,91.31,,,,USPF,IPF,1983-04-30,USA,VA,Roanoke,Virgina State Championships
+Braxton Mikesell,M,D,Single-ply,,13-15,14-18,Teen 14-15,82.5,82.5,,,,,,,,,,,,,,,210.5,210.5,1,142.59,141.02,135.68,,Yes,USA,WA,WABDL,,2016-08-20,USA,WA,Olympus,Great Northern
+Anibal Espinoza,M,SBD,Single-ply,,,,Boys,77.84,82.1,,,,,165.56,,,,,92.99,,,,,176.9,435.45,12,305.23,302.57,291.89,52.26,Yes,,,THSPA,,2016-01-08,USA,TX,Rio Grande City,Rio Grande City Powerlifting Meet
+Sarah Ortiz,F,SBD,Single-ply,,18-19,,Girls,74.84,75,,,,,133.81,,,,,58.97,,,,,124.74,317.51,1,309.60,302.24,265.89,52.46,Yes,,,THSWPA,,2017-02-11,USA,TX,Childress,Childress Powerlifting Meet
+Nicholas Squires,M,SBD,Raw,30,24-34,24-39,Police Amateur Open,81.37,82.5,,,,,204.12,,,,,138.35,,,,,229.06,571.53,1,390.21,386.08,371.72,79.91,Yes,,,RPS,,2023-09-17,USA,PA,Lancaster,Raw Dawg
+Gregory Neumann,M,SBD,Raw,59,55-59,,M-M4,82,82.5,,,,,180,,,,,130,,,,,230,540,1,367.06,363.08,349.45,75.21,Yes,Australia,,WDFPF,WDFPF,2019-10-25,Germany,,Haale,World Powerlifting Championships
+Timur Kostarev,M,SBD,Single-ply,16.5,16-17,14-18,Sub-Juniors,86.25,90,,,,,240,,,,,152.5,,,,,235,627.5,7,414.80,409.74,393.45,70.89,Yes,,,FPR,IPF,2002-08-01,Russia,SVE,Rezh,Russian Sub-Juniors Powerlifting Championships
+Devan Ruel,M,SBD,Raw,23,20-23,19-23,Open,94.8,100,170,172.5,177.5,,177.5,142.5,152.5,162.5,,162.5,190,210,227.5,,227.5,567.5,2,357.80,353.34,337.94,73.55,,USA,ME,USPA,IPL,2021-10-09,USA,ME,Portland,Portland Open
+Gabriel Sanchez,M,SBD,Wraps,35,35-39,24-39,MSR,89.92,90,,,,,210,,,,,135,,,,,252.5,597.5,1,386.52,381.61,365.75,79.47,,,,UPA,,2017-03-04,USA,WA,Wenatchee,Washington Spring Championship
+Odd Arne Opstad,M,SBD,Raw,50.5,50-54,50-59,Masters 50-59,102.55,105,200,225,240,,240,150,160,-171,,160,220,240,270,,270,670,1,408.01,403.80,385.58,83.64,Yes,Norway,,NSF,IPF,2019-04-25,Norway,,Bergen,NM styrkelft utstyrsfritt ungdom junior og veter
+Edward Villmore,M,BD,Raw,31.5,24-34,24-39,Amateur Open,95.8,100,,,,,,,,,,158.76,,,,,294.84,453.59,1,284.60,281.09,268.75,,Yes,USA,,RPS,,2022-07-10,USA,MA,Natick,MetFIT Summer Sizzler
+Esko Jrvenp,M,SBD,Single-ply,46.5,45-49,40-49,Over 40,67.5,67.5,,,,,160,,,,,117.5,,,,,195,472.5,2,364.18,364.30,353.63,62.29,Yes,,,SVNL,IPF,1992-04-25,Finland,,Naantali,Veteraanien M40 voimanoston SM-kisat
+Dan Stone,M,SB,Raw,,,,MR-T3,85.3,93,,,,,182.5,,,,,95,,,,,,277.5,1,184.53,182.33,175.16,,Yes,,,USAPL,IPF,2015-02-21,USA,MN,,Minnesota State Powerlifting Open
+Mackenzie Curtis,F,SBD,Single-ply,17.5,18-19,14-18,Sub-Juniors,81.18,84,-185,185,192.5,,192.5,72.5,87.5,97.5,,97.5,165,-170,-182.5,,165,455,2,425.63,413.00,361.88,72.55,Yes,USA,,IPF,IPF,2015-08-31,Czechia,,Prague,World Sub-Juniors & Juniors Powerlifting Championships
+Andr Hentschel,M,SBD,Single-ply,26,24-34,24-39,Open,92.4,93,-310,-325,325,,325,235,242.5,250,,250,275,282.5,-287.5,,282.5,857.5,2,547.29,540.34,517.29,93.31,Yes,Germany,,BVDK,IPF,2011-02-19,Germany,,Wahrsow,DM KDK Aktive
+Anton Navolokin,M,D,Raw,31,24-34,24-39,Pro Open,130,140,,,,,,,,,,,280,300,307.5,,307.5,307.5,1,172.18,173.92,166.14,,,Russia,,NAP,IPA,2017-03-03,Russia,BEL,Belgorod,Russian Powerlifting Championships
+Blake McCann,M,SBD,Single-ply,,,,Div 3,51.8,55.7,,,,,117.93,,,,,61.23,,,,,147.42,326.59,4,313.95,321.77,316.96,52.86,Yes,,,THSPA,,2011-03-12,USA,TX,Rusk,Regional Meet
+Elijah Olivo,M,SBD,Single-ply,,,,Boys,105.14,109.7,,,,,161.03,,,,,74.84,,,,,163.29,399.16,8,240.60,238.41,227.66,40.77,Yes,,,THSPA,,2019-02-09,USA,TX,Friona,Friona Powerlifting Meet
+lvaro Souza,M,SBD,Raw,,40-44,40-49,M 40-44,81.5,82.5,,,,,140,,,,,82.5,,,,,182.5,405,1,276.26,273.32,263.13,56.58,,,,WPC-Portugal,WPC,2020-02-08,Portugal,,,National Championship
+Unnur Erna Ingimarsdttir,F,B,Raw,28.5,24-34,24-39,Open,61.4,63,,,,,,60,65,-70,,65,,,,,,65,2,71.02,71.19,62.88,55.05,Yes,,,KRAFT,IPF,2012-10-06,Iceland,,Seltjarnarnes,Seltjarnarnesmt  klassskri bekkpressu
+Karina Barraza,F,SBD,Raw,21,20-23,19-23,Juniors 20-23,94.6,90+,120,125,137.5,,137.5,60,-67.5,-67.5,,60,135,157.5,-182.5,,157.5,355,1,309.79,300.92,260.22,64.33,Yes,USA,TX,USPA,IPL,2020-03-01,USA,NM,Albuquerque,Drug Tested Weights for Apes Powerlifting Meet
+Duree,M,SBD,Single-ply,,,,Natural,125,125,,,,,273.5,,,,,142.5,,,,,237.5,653.5,1,370.38,372.39,356.37,62.20,Yes,,,NASA,,1995-10-07,USA,KS,Kansas City,Kansas Regional
+Akhmed Musaev,M,B,Raw,35,35-39,24-39,Open,104.1,110,,,,,,180,-190,,,180,,,,,,180,6,108.94,107.89,103.02,80.92,,Russia,,GPA,GPA,2015-11-06,Russia,MOW,Moscow,Eastern European Cup
+Ron Bunyan,M,SBD,Single-ply,,,,Masters 40-49,67.5,67.5,,,,,175,,,,,100,,,,,230,505,2,389.23,389.36,377.95,66.58,Yes,,,BAWLA,IPF,1982-07-10,England,,Milton Keyes,Open Masters Championships
+Marcus Stroud,M,SBD,Single-ply,,,,Boys,92.44,99.7,,,,,226.8,,,,,,,,,,,,DQ,,,,,Yes,,,THSPA,,2011-02-26,USA,TX,Frisco,Wakeland Powerlifting Meet
+Knut Klaunes Evensen,M,SBD,Raw,,,,Open,102.3,105,200,215,220,,220,155,165,170,,170,260,277.5,292.5,,292.5,682.5,1,416.04,411.71,393.14,85.30,Yes,,,NSF,IPF,2022-12-17,Norway,,Gressvik,pent stevne
+Deondria Brandyburg,F,SBD,Single-ply,,16-17,,Girls,72.12,75,,,,,,,,,,,,,,,,,DQ,,,,,Yes,,,THSWPA,,2017-01-21,USA,TX,Smithville Texas,Smithville Powerlifting Championshipts
+Tomas Dahlman,M,B,Single-ply,,,,Open,101.4,105,,,,,,,,,,130,,,,,,130,1,79.54,78.69,75.14,41.05,Yes,,,SSF,IPF,2011-04-21,Sweden,,,Degerfors KM BP
+Igor Usachev,M,BD,Raw,56,55-59,50-59,Pro Masters 50-59,96.9,100,,,,,,135,145,150,,150,230,245.5,-250.5,,245.5,395.5,1,246.86,243.87,233.08,,,Russia,,WRPF,WRPF,2021-12-16,Russia,MOW,Moscow,World Championships
+Nikodem Selech,M,SBD,Raw,,,,Seniorzy,96,105,100,-120,130,,130,-95,-95,-95,,,150,-160,-160,,150,,DQ,,,,,Yes,,,PZKFiTS,IPF,2022-05-06,Poland,,Katowice,Akademickie Mistrzostwa Polski w Trjboju Siowym Klasycznym
+P. Craig,M,SBD,Single-ply,,,,Open,90,90,,,,,215,,,,,125,,,,,205,545,2,352.40,347.92,333.45,60.14,Yes,Canada,BC,CPU,IPF,1995-11-05,Canada,BC,Vancouver,Fall Classic
+Juhani Krkkinen,M,SBD,Wraps,61,60-64,60-69,Masters 60-64,99.1,100,170,-185,,,170,135,142.5,-147.5,,142.5,75,,,,75,387.5,1,239.45,236.69,226.10,49.16,,Finland,,FPO,IPA,2021-05-28,Finland,,Laitila,National Championships
+Ivan Librekht,M,B,Raw,35.5,35-39,24-39,Open,90.1,93,,,,,,90,100,-120,,100,,,,,,100,7,64.62,63.80,61.15,48.19,Yes,,,FPR,IPF,2016-08-14,Russia,NVS,Gvardeyskiy,Gvardeyskiy Raw Bench Press Tournament
+Jezer Feliz,M,SBD,Single-ply,14.5,13-15,14-18,M-HS,50.9,52,90.7,102.1,113.4,,113.4,43.1,52.2,59,,59,90.7,102.1,113.4,,113.4,285.8,1,279.40,286.86,282.85,46.96,Yes,USA,PA,USAPL,IPF,2016-03-12,USA,PA,,Glen Mills High School National Qualifying Meet
+Matthew Hicks,M,SBD,Raw,27.5,24-34,24-39,MR-O,92.9,93,-227.5,-227.5,227.5,,227.5,-172.5,172.5,-190,,172.5,260,282.5,295,,295,695,1,442.42,436.82,418.10,90.97,Yes,USA,MA,USAPL,IPF,2019-08-24,USA,CT,,CT Summer Showdown
+D. Eaton,M,SBD,Single-ply,,18-19,,High School,90,90,,,,,,,,,,,,,,,,530.7,3,343.15,338.80,324.70,58.56,,,,USA-UA,,1983-05-01,USA,OK,Tulsa,Oklahoma High School Championships
+Bradley Allen,M,SBD,Raw,36,35-39,24-39,Open,98,100,,,,,105,,,,,90,,,,,137.5,332.5,12,206.48,204.04,194.96,42.41,,USA,OH,USPA,IPL,2019-04-13,USA,OH,Cleveland,The Battle XXII
+Denis Sapozhkov,M,SBD,Raw,38,35-39,24-39,Pro Open,108,110,220,235,-245,,235,135,150,155,,155,240,250,-260,,250,640,1,381.71,378.82,361.89,77.99,,Russia,,WPF-RUS,WPF,2017-10-07,Russia,MOW,Moscow,PROMotion Tournament
+Hung Phan,M,SBD,Raw,29.5,24-34,24-39,MR-O,105.9,110,280,300,310,,310,172.5,180,182.5,,182.5,330,-350,-350,,330,822.5,1,494.35,490.04,467.98,101.15,Yes,Australia,,USAPL,,2022-09-10,Australia,,,Sydney Invitational
+Henry Manriquez,M,BD,Raw,,,,Open,67.5,67.5,,,,,,,,,,106.59,,,,,195.04,301.64,3,232.49,232.57,225.75,,,,,USPF,IPF,1984-12-15,USA,MI,Warren,Hercules Gym Open Bench & Deadlift
+James Wilson #10,M,SBD,Raw,48,45-49,40-49,Amateur Masters 45-49,110.22,125,,,,,167.83,,,,,106.59,,,,,208.65,483.08,1,285.90,284.12,271.56,58.33,Yes,USA,,RPS,,2017-03-25,USA,CT,Sterling,New England Revolution Powerlifting Championships
+Christopher Grigler,M,SBD,Wraps,,,,M_OCR_APF,95.6,100,,,,,204.12,,,,,133.81,,,,,219.99,557.92,2,350.39,346.06,330.89,72.02,,,,APF,WPC,2023-06-24,USA,LA,,Bayou Border Bash
+Anastasiya Kosyakevich,F,B,Raw,26,24-34,24-39,Amateur Open,58.3,60,,,,,,40,-50,-50,,40,,,,,,40,6,45.16,45.60,40.31,35.02,Yes,Russia,,NAP,IPA,2014-10-17,Russia,SVE,Yekaterinburg,World Championships & Golden Tiger 8
+Wynn Wollermann,M,SBD,Raw,14.5,13-15,14-18,MR-T1,71.8,75,102.5,107.5,,,107.5,75,80,-82.5,,80,117.5,,,,117.5,305,3,225.16,224.24,217.07,45.49,Yes,USA,WI,USAPL,,2022-11-12,USA,WI,,Gainsgiving Open
+Asher Chapman,M,SBD,Raw,14.5,13-15,14-18,Amateur Teen 14-15,63.96,67.5,,,,,102.06,,,,,52.16,,,,,145.15,299.37,1,240.18,241.32,234.86,47.45,Yes,USA,VT,RPS,,2015-02-07,USA,VT,Fair Haven,Winter Classic
+L. Kleynhans,M,SBD,Single-ply,,,,Open,110,110,,,,,280,,,,,160,,,,,320,760,1,450.12,447.25,427.46,76.10,Yes,,,SAPF,IPF,1981-09-05,South Africa,,Bloemfontein,South African Championships
+Blake Parado,M,B,Raw,35,35-39,24-39,Submasters 35-39,67.4,67.5,,,,,,110,115,-120,,115,,,,,,115,1,88.73,88.77,86.18,64.49,Yes,USA,HI,USPA,IPL,2023-06-24,USA,HI,Waianae,Drug Tested Valley of the Giants Summer Classic
+Haily Trevino,F,SBD,Single-ply,,16-17,14-18,Girls,55.34,56,,,,,136.08,,,,,56.7,,,,,120.2,312.98,1,365.65,371.69,328.86,61.14,Yes,,,THSWPA,,2019-01-24,USA,TX,Hull-Daisetta,HD2
+Konrad Barczykowski,M,SBD,Wraps,26,24-34,24-39,Seniors,80.8,,240,247.5,255,,255,135,-142.5,-142.5,,135,225,240,-257.5,,240,630,20,431.89,427.43,411.66,88.40,,,,WPC-Poland,WPC,2020-10-22,Poland,,Wrocaw,Polish Championships
+Mark Rosen,M,SBD,Wraps,,20-23,,Amateur Juniors 20-23,108.95,110,,,,,174.63,,,,,151.95,,,,,224.53,551.11,4,327.59,325.29,310.82,66.89,Yes,USA,,RPS,,2016-07-23,USA,NY,Bohemia,HeatWave Powerlifting
+Asgeir Hoel,M,SBD,Single-ply,,,,Open,103.77,105,310,-325,330,,330,212.5,217.5,-222.5,,217.5,305,315,322.5,,322.5,870,1,527.21,522.06,498.49,89.41,Yes,Norway,,EPF,IPF,2015-09-26,Spain,,Madrid,Arnold's Europe Powerlifting Championships
+Britt Bartosiewicz,M,SBD,Raw,,40-44,40-49,M_MR_1_AAPF,96.62,100,210.92,219.99,226.8,,226.8,142.88,154.22,,,154.22,204.12,219.99,,,219.99,601.01,1,375.62,371.05,354.67,77.18,Yes,,,APF,WPC,2012-01-21,USA,MI,,Great Lakes Open
+Andrey Sinitsyn,M,SBD,Single-ply,29.5,24-34,24-39,Open,123.85,120+,,,,,320,,,,,220,,,,,315,855,2,486.00,488.15,467.45,81.66,Yes,Russia,,FPR,IPF,2011-05-12,Russia,BRY,Suzemka,Bryansk Oblast Powerlifting & Bench Press Championships
+Mackenzie Lewis #2,M,SBD,Raw,22.5,20-23,19-23,MR-O,92.6,93,142.5,175,-187.5,,175,102.5,107.5,110,,110,205,-230,-230,,205,490,14,312.41,308.45,295.26,64.24,Yes,USA,NC,USAPL,IPF,2016-11-05,USA,NC,,Fall Festival of Power
+Oleksandr Shevtsov,M,SBD,Wraps,31,24-34,24-39,Open,98.28,100,245,260,270,,270,130,140,,,140,230,240,245,,245,655,3,406.24,401.46,383.57,83.43,Yes,Ukraine,,UPC,UPC,2016-10-21,Ukraine,,Kyev,Ukrainian Cup
+Galata Gouissemi,F,B,Raw,21,20-23,19-23,Elite,53.4,,,,,,,52.5,57.5,,,57.5,,,,,,57.5,1,68.82,70.22,62.19,53.79,Yes,,,FFForce,IPF,2020-02-01,France,,Le Puy-en-Velay,Eliminatoires Jean Villenave LAURAF
+N. Johnson,M,SBD,Single-ply,,,24-39,High School,67.5,67.5,,,,,,,,,,,,,,,,483.08,14,372.33,372.46,361.55,63.69,Yes,,,THSPA,,1990-03-31,USA,TX,Dallas,Texas High School Championships
+Kristijan kugor,M,SBD,Raw,,,,Open,124.7,120+,235,250,262.5,,262.5,170,185,190.5,,190.5,242.5,265,280,,280,733,1,415.75,417.90,400.00,83.81,Yes,Croatia,,HPLS,IPF,2020-09-05,Croatia,,Zadar,9. Dravno prvenstvo u powerliftingu i bench pressu
+Chuck Vogelpohl,M,SBD,Multi-ply,42,40-44,40-49,Pro Open,122.6,125,-503.49,-530.7,,,,-276.69,,,,,,,,,,,DQ,,,,,,USA,,IPA,,2008-01-19,USA,OH,Columbus,Columbus Pro-Am
+Carolina Ocano,F,SBD,Raw,20,20-23,19-23,F_OR_AAPF,80.9,82.5,120,130,-137.5,,130,60,62.5,65,,65,142.5,147.5,155,,155,350,1,327.97,318.29,278.95,67.11,Yes,USA,,APF,WPC,2022-06-25,USA,AZ,,Summer Bash
+Marissa Trousdale,F,SBD,Single-ply,,,,Girls,47.22,47.8,,,,,56.7,,,,,31.75,,,,,81.65,170.1,1,222.16,228.00,203.17,37.14,Yes,,,THSWPA,,2016-02-04,USA,TX,Hull-Daisetta,West Hardin Girls
+Ashlynn Tatsch,F,SBD,Single-ply,,,,Girls,47.4,47.8,,,,,81.65,,,,,40.82,,,,,88.45,210.92,3,274.70,281.93,251.16,45.92,Yes,,,THSWPA,,2016-02-20,USA,TX,Poth JH Gym,Poth Powerlifting Meet
+Angie Castillo,F,SBD,Single-ply,,,,Girls,60.06,60.1,,,,,90.72,,,,,34.02,,,,,97.52,222.26,8,246.23,247.60,218.77,41.26,Yes,,,THSWPA,,2015-02-14,USA,TX,Iowa Park,Mean Green Invitational
+Carsten Jrgensen,M,SBD,Single-ply,31.5,24-34,24-39,Open,124.1,125,,,,,,,,,,,,,,,,,DQ,,,,,Yes,,,DSF,IPF,2008-11-22,Denmark,,Trnby,TSK Cup
+runn Bjrk Jnsdttir,F,B,Raw,22.5,20-23,19-23,Open,81.85,84,,,,,,40,45,-50,,45,,,,,,45,3,41.93,40.67,35.62,33.80,Yes,,,KRAFT,IPF,2021-08-28,Iceland,,Garabr,M  klassskri bekkpressu
+Kevin Frantz,M,SBD,Single-ply,,,,Boys,122.47,124.7,,,,,183.7,,,,,117.93,,,,,174.63,476.27,4,271.70,272.57,261.14,45.68,Yes,,,THSPA,,2010-01-28,USA,TX,Brewer,Brewer Meet
+Chris Leskiw,M,SBD,Wraps,30,24-34,24-39,MOR,67.15,67.5,-170,-170,170,,170,-100,-100,-100,,,-205,-205,-205,,,,DQ,,,,,,USA,,UPA,,2018-12-15,USA,OH,Brook Park,Old School Winter Rack

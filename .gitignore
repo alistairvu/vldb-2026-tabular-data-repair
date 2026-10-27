@@ -6,3 +6,5 @@ build/**
 output.*.csv
 error.log
 output.csv
+output.tmp.csv
+telementry.json

@@ -10,13 +10,13 @@ import sys
 import time
 import traceback
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Sequence
 from urllib.request import Request, urlopen
 
-from core import AlgorithmMeasurements, BatchSession, Config, Oracle, UNLIMITED
+from core import UNLIMITED, AlgorithmMeasurements, BatchSession, Config, Oracle
 
 
 @dataclass(frozen=True)
@@ -67,11 +67,14 @@ class ExternalOracle(Oracle):
         self.candidates_submitted = 0
         self.cache: dict[str, bool] = {}
 
-    def accepts_batch(self, values: Sequence[str],
-                      deadline: float | None = None) -> list[bool]:
+    def accepts_batch(
+        self, values: Sequence[str], deadline: float | None = None
+    ) -> list[bool]:
         if not values:
             return []
-        unknown = list(dict.fromkeys(value for value in values if value not in self.cache))
+        unknown = list(
+            dict.fromkeys(value for value in values if value not in self.cache)
+        )
         if unknown:
             if deadline is not None and time.monotonic() >= deadline:
                 raise RuntimeError("cell timeout")
@@ -81,9 +84,14 @@ class ExternalOracle(Oracle):
             try:
                 response = subprocess.run(
                     [str(self.executable)],
-                    input=json.dumps({"column": self.column, "candidates": unknown},
-                                     separators=(",", ":")),
-                    text=True, capture_output=True, check=False, timeout=timeout,
+                    input=json.dumps(
+                        {"column": self.column, "candidates": unknown},
+                        separators=(",", ":"),
+                    ),
+                    text=True,
+                    capture_output=True,
+                    check=False,
+                    timeout=timeout,
                 )
             except subprocess.TimeoutExpired as error:
                 raise RuntimeError("cell timeout") from error
@@ -108,8 +116,9 @@ def _object(value: object, context: str) -> dict[str, object]:
     return value
 
 
-def _integer(obj: dict[str, object], key: str, context: str,
-             boundary: bool = False) -> int:
+def _integer(
+    obj: dict[str, object], key: str, context: str, boundary: bool = False
+) -> int:
     if key not in obj or type(obj[key]) is not int:
         raise RuntimeError(f"{context}.{key} must be a non-negative integer")
     value = obj[key]
@@ -136,69 +145,114 @@ def parse_config(value: object) -> PipelineConfig:
     if set(jev) - {"confidence_threshold", "timeout_seconds"}:
         raise RuntimeError("config.jev contains unsupported fields")
     threshold = jev.get("confidence_threshold", 0.5)
-    if (isinstance(threshold, bool) or not isinstance(threshold, (int, float)) or
-            not 0 <= threshold <= 1):
+    if (
+        isinstance(threshold, bool)
+        or not isinstance(threshold, (int, float))
+        or not 0 <= threshold <= 1
+    ):
         raise RuntimeError("config.jev.confidence_threshold must be between 0 and 1")
     if "rsr_batch_size" in repair:
         raise RuntimeError("config.repair.rsr_batch_size is not supported")
     repair_fields = {
-        "n", "ngrams_batch_size", "max_candidate_length", "num_candidates",
+        "n",
+        "ngrams_batch_size",
+        "max_candidate_length",
+        "num_candidates",
         "edit_distance_cap",
     }
     if set(repair) - repair_fields:
         raise RuntimeError("config.repair contains unsupported fields")
     capacity_fields = {
-        "initial_positive_capacity", "initial_negative_capacity",
-        "positive_capacity", "negative_capacity", "cell_timeout_seconds",
+        "initial_positive_capacity",
+        "initial_negative_capacity",
+        "positive_capacity",
+        "negative_capacity",
+        "cell_timeout_seconds",
     }
     if set(batching) - capacity_fields:
         raise RuntimeError("config.batching contains unsupported fields")
-    limit_fields = {"max_iterations", "max_states", "max_queue_size",
-                    "max_rsr_candidates"}
+    limit_fields = {
+        "max_iterations",
+        "max_states",
+        "max_queue_size",
+        "max_rsr_candidates",
+    }
     if set(limits) - limit_fields:
         raise RuntimeError("config.limits contains unsupported fields")
     core = Config(
         seed=_integer(root, "seed", "config") if "seed" in root else 0,
         n=_integer(repair, "n", "config.repair"),
         ngrams_batch_size=_integer(repair, "ngrams_batch_size", "config.repair", True),
-        max_candidate_length=_integer(repair, "max_candidate_length", "config.repair", True)
-        if "max_candidate_length" in repair else UNLIMITED,
+        max_candidate_length=_integer(
+            repair, "max_candidate_length", "config.repair", True
+        )
+        if "max_candidate_length" in repair
+        else UNLIMITED,
         max_iterations=_integer(limits, "max_iterations", "config.limits", True),
         max_states=_integer(limits, "max_states", "config.limits", True),
         max_queue_size=_integer(limits, "max_queue_size", "config.limits", True)
-        if "max_queue_size" in limits else UNLIMITED,
+        if "max_queue_size" in limits
+        else UNLIMITED,
         max_rsr_candidates=_integer(limits, "max_rsr_candidates", "config.limits", True)
-        if "max_rsr_candidates" in limits else UNLIMITED,
-        positive_capacity=_integer(batching, "positive_capacity", "config.batching", True)
-        if "positive_capacity" in batching else UNLIMITED,
-        negative_capacity=_integer(batching, "negative_capacity", "config.batching", True)
-        if "negative_capacity" in batching else UNLIMITED,
+        if "max_rsr_candidates" in limits
+        else UNLIMITED,
+        positive_capacity=_integer(
+            batching, "positive_capacity", "config.batching", True
+        )
+        if "positive_capacity" in batching
+        else UNLIMITED,
+        negative_capacity=_integer(
+            batching, "negative_capacity", "config.batching", True
+        )
+        if "negative_capacity" in batching
+        else UNLIMITED,
     )
     result = PipelineConfig(
         core,
         _integer(batching, "initial_positive_capacity", "config.batching", True)
-        if "initial_positive_capacity" in batching else UNLIMITED,
+        if "initial_positive_capacity" in batching
+        else UNLIMITED,
         _integer(batching, "initial_negative_capacity", "config.batching", True)
-        if "initial_negative_capacity" in batching else UNLIMITED,
+        if "initial_negative_capacity" in batching
+        else UNLIMITED,
         _integer(batching, "cell_timeout_seconds", "config.batching"),
         _integer(repair, "num_candidates", "config.repair")
-        if "num_candidates" in repair else 5,
+        if "num_candidates" in repair
+        else 5,
         _integer(repair, "edit_distance_cap", "config.repair")
-        if "edit_distance_cap" in repair else 3,
+        if "edit_distance_cap" in repair
+        else 3,
         float(threshold),
         _integer(jev, "timeout_seconds", "config.jev")
-        if "timeout_seconds" in jev else 15,
+        if "timeout_seconds" in jev
+        else 15,
     )
-    if not all((core.ngrams_batch_size, core.max_candidate_length,
-                core.max_iterations, core.max_states, core.max_queue_size,
-                core.max_rsr_candidates, core.negative_capacity,
-                result.initial_positive_capacity,
-                result.initial_negative_capacity, result.cell_timeout_seconds,
-                result.num_candidates, result.jev_timeout_seconds)):
-        raise RuntimeError("configured counts and resource limits must be positive or -1 where supported")
-    if (core.positive_capacity < result.initial_positive_capacity or
-            core.negative_capacity < result.initial_negative_capacity):
-        raise RuntimeError("ongoing capacities must be at least their initial capacities")
+    if not all(
+        (
+            core.ngrams_batch_size,
+            core.max_candidate_length,
+            core.max_iterations,
+            core.max_states,
+            core.max_queue_size,
+            core.max_rsr_candidates,
+            core.negative_capacity,
+            result.initial_positive_capacity,
+            result.initial_negative_capacity,
+            result.cell_timeout_seconds,
+            result.num_candidates,
+            result.jev_timeout_seconds,
+        )
+    ):
+        raise RuntimeError(
+            "configured counts and resource limits must be positive or -1 where supported"
+        )
+    if (
+        core.positive_capacity < result.initial_positive_capacity
+        or core.negative_capacity < result.initial_negative_capacity
+    ):
+        raise RuntimeError(
+            "ongoing capacities must be at least their initial capacities"
+        )
     return result
 
 
@@ -264,15 +318,22 @@ def read_schema(path: Path, columns: list[str]) -> dict[str, str]:
         raise RuntimeError("schema must contain schema_version 1 and columns")
     descriptions = _object(root["columns"], "schema.columns")
     if set(descriptions) != set(columns) or any(
-            not isinstance(value, str) or not value.strip()
-            for value in descriptions.values()):
-        raise RuntimeError("schema columns must exactly match CSV columns with descriptions")
+        not isinstance(value, str) or not value.strip()
+        for value in descriptions.values()
+    ):
+        raise RuntimeError(
+            "schema columns must exactly match CSV columns with descriptions"
+        )
     return {column: str(descriptions[column]) for column in columns}
 
 
-def select_row_with_jev(columns: list[str], descriptions: dict[str, str],
-                        row: list[str], candidate_sets: dict[int, list[str]],
-                        timeout: float) -> dict[int, JevSelection]:
+def select_row_with_jev(
+    columns: list[str],
+    descriptions: dict[str, str],
+    row: list[str],
+    candidate_sets: dict[int, list[str]],
+    timeout: float,
+) -> dict[int, JevSelection]:
     api_key = os.environ.get("TYPESAFE_API_KEY", "").strip()
     if not api_key:
         raise RuntimeError("TYPESAFE_API_KEY is not set")
@@ -293,11 +354,11 @@ def select_row_with_jev(columns: list[str], descriptions: dict[str, str],
         "model": JEV_MODEL,
         "state": {
             "columns": [
-                {"name": name, "description": descriptions[name]}
-                for name in columns
+                {"name": name, "description": descriptions[name]} for name in columns
             ],
             "fixed_values": {
-                name: value for index, (name, value) in enumerate(zip(columns, row))
+                name: value
+                for index, (name, value) in enumerate(zip(columns, row))
                 if index not in candidate_sets and not is_missing(value)
             },
             "candidate_sets": {
@@ -308,16 +369,24 @@ def select_row_with_jev(columns: list[str], descriptions: dict[str, str],
         "questions": questions,
     }
     request = Request(
-        JEV_URL, data=json.dumps(payload, separators=(",", ":")).encode(),
-        headers={"Authorization": f"Bearer {api_key}",
-                 "Content-Type": "application/json"}, method="POST")
+        JEV_URL,
+        data=json.dumps(payload, separators=(",", ":")).encode(),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
     try:
         with urlopen(request, timeout=timeout) as response:
             result = json.loads(response.read())
     except Exception as error:
         raise RuntimeError("Jev request failed") from error
-    if (not isinstance(result, dict) or result.get("model") != JEV_MODEL or
-            not isinstance(result.get("answers"), dict)):
+    if (
+        not isinstance(result, dict)
+        or result.get("model") != JEV_MODEL
+        or not isinstance(result.get("answers"), dict)
+    ):
         raise RuntimeError("invalid Jev response")
     answers = result["answers"]
     if set(answers) != set(questions):
@@ -328,10 +397,13 @@ def select_row_with_jev(columns: list[str], descriptions: dict[str, str],
         if not isinstance(answer, dict):
             raise RuntimeError("invalid Jev response")
         choice, confidence = answer.get("choice"), answer.get("confidence")
-        if (not isinstance(choice, str) or not choice.startswith("candidate_") or
-                isinstance(confidence, bool) or
-                not isinstance(confidence, (int, float)) or
-                not 0 <= confidence <= 1):
+        if (
+            not isinstance(choice, str)
+            or not choice.startswith("candidate_")
+            or isinstance(confidence, bool)
+            or not isinstance(confidence, (int, float))
+            or not 0 <= confidence <= 1
+        ):
             raise RuntimeError("invalid Jev response")
         try:
             candidate = int(choice.removeprefix("candidate_"))
@@ -339,8 +411,7 @@ def select_row_with_jev(columns: list[str], descriptions: dict[str, str],
             raise RuntimeError("invalid Jev response") from error
         if not 0 <= candidate < len(candidates):
             raise RuntimeError("invalid Jev response")
-        selections[column] = JevSelection(
-            candidate, float(confidence), JEV_MODEL)
+        selections[column] = JevSelection(candidate, float(confidence), JEV_MODEL)
     return selections
 
 
@@ -350,8 +421,9 @@ def oracle_path(path: Path) -> Path:
     return path.resolve()
 
 
-def _query_oracle(oracle: Oracle, values: Sequence[str],
-                  deadline: float | None = None) -> list[bool]:
+def _query_oracle(
+    oracle: Oracle, values: Sequence[str], deadline: float | None = None
+) -> list[bool]:
     result = oracle.accepts_batch(values, deadline)
     if len(result) != len(values) or any(type(item) is not bool for item in result):
         raise RuntimeError("oracle query did not return one boolean per candidate")
@@ -374,9 +446,12 @@ def _measurement_fields(measurements: AlgorithmMeasurements) -> dict[str, object
         "ngrams_execution_time_ns": measurements.ngrams_execution_time_ns,
         "total_iterations": measurements.total_iterations,
         "rsr_iterations": len(measurements.rsr_iterations),
-        "rsr_candidates_generated": sum(item.unique_candidates for item in measurements.rsr_iterations),
-        "rsr_enumeration_truncated": any(not item.enumeration_complete
-                                          for item in measurements.rsr_iterations),
+        "rsr_candidates_generated": sum(
+            item.unique_candidates for item in measurements.rsr_iterations
+        ),
+        "rsr_enumeration_truncated": any(
+            not item.enumeration_complete for item in measurements.rsr_iterations
+        ),
     }
 
 
@@ -384,8 +459,9 @@ def candidate_output_path(output_path: Path) -> Path:
     return output_path.with_suffix(".tmp.csv")
 
 
-def _read_candidate_sets(path: Path, columns: list[str], row_count: int
-                         ) -> dict[tuple[int, int], list[str]]:
+def _read_candidate_sets(
+    path: Path, columns: list[str], row_count: int
+) -> dict[tuple[int, int], list[str]]:
     header, records = read_csv(path)
     expected = ["row", "column", "malformed_value", "candidate_rank", "candidate"]
     if header != expected:
@@ -403,17 +479,27 @@ def _read_candidate_sets(path: Path, columns: list[str], row_count: int
         values = result.setdefault((row, column), [])
         if not record[3] and not record[4]:
             if values:
-                raise RuntimeError("candidate CSV mixes candidates with an empty sentinel")
+                raise RuntimeError(
+                    "candidate CSV mixes candidates with an empty sentinel"
+                )
             continue
         if record[3] != str(len(values) + 1) or record[4] in values:
-            raise RuntimeError("candidate CSV has invalid candidate ranks or duplicates")
+            raise RuntimeError(
+                "candidate CSV has invalid candidate ranks or duplicates"
+            )
         values.append(record[4])
     return result
 
 
-def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
-                  config_path: Path, oracle_executable: Path, output_path: Path,
-                  telemetry_path: Path) -> None:
+def _run_pipeline(
+    input_path: Path,
+    ground_truth_path: Path,
+    schema_path: Path,
+    config_path: Path,
+    oracle_executable: Path,
+    output_path: Path,
+    telemetry_path: Path,
+) -> None:
     started = time.monotonic()
     candidate_path = candidate_output_path(output_path)
     if candidate_path.resolve() == telemetry_path.resolve():
@@ -421,7 +507,8 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
     try:
         with candidate_path.open("w", newline="", encoding="utf-8") as stream:
             csv.writer(stream, lineterminator="\n").writerow(
-                ["row", "column", "malformed_value", "candidate_rank", "candidate"])
+                ["row", "column", "malformed_value", "candidate_rank", "candidate"]
+            )
             stream.flush()
     except OSError as error:
         raise RuntimeError(f"cannot write candidate CSV: {candidate_path}") from error
@@ -434,7 +521,9 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
     descriptions = read_schema(schema_path, columns)
     input_correct_cells = sum(
         not is_missing(truth_rows[row][column]) and value == truth_rows[row][column]
-        for row, values in enumerate(source_rows) for column, value in enumerate(values))
+        for row, values in enumerate(source_rows)
+        for column, value in enumerate(values)
+    )
     candidate_correct_cells = 0
     states = [[CellState() for _ in columns] for _ in source_rows]
     accepted_counts = [Counter() for _ in columns]
@@ -459,11 +548,16 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
             accepted_values: set[str] = set()
             rejected_order: list[str] = []
             occurrences: dict[str, list[int]] = {}
-            distinct = list(dict.fromkeys(
-                values[column] for values in source_rows
-                if not is_missing(values[column])))
+            distinct = list(
+                dict.fromkeys(
+                    values[column]
+                    for values in source_rows
+                    if not is_missing(values[column])
+                )
+            )
             initial_answers = _query_oracle(
-                oracle, distinct, time.monotonic() + config.cell_timeout_seconds)
+                oracle, distinct, time.monotonic() + config.cell_timeout_seconds
+            )
             initially_accepted = dict(zip(distinct, initial_answers))
             for row, values in enumerate(source_rows):
                 value = values[column]
@@ -493,11 +587,14 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
                 generator.shuffle(positives)
                 generator.shuffle(initial_negatives)
                 if config.initial_positive_capacity != UNLIMITED:
-                    positives = positives[:config.initial_positive_capacity]
+                    positives = positives[: config.initial_positive_capacity]
                 if config.initial_negative_capacity != UNLIMITED:
-                    initial_negatives = initial_negatives[:config.initial_negative_capacity]
+                    initial_negatives = initial_negatives[
+                        : config.initial_negative_capacity
+                    ]
                 session = BatchSession(
-                    positives, config.core, measurements, initial_negatives)
+                    positives, config.core, measurements, initial_negatives
+                )
 
             repaired_count = 0
             timed_out_count = 0
@@ -507,12 +604,16 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
                     candidates, failure = [], "no_accepted_values"
                 else:
                     candidates, failure = session.repair_candidates(
-                        dirty, oracle,
+                        dirty,
+                        oracle,
                         repair_started + config.cell_timeout_seconds,
-                        measurements, config.num_candidates,
+                        measurements,
+                        config.num_candidates,
                         config.edit_distance_cap,
                     )
-                    candidates = [value for value in candidates if not is_missing(value)]
+                    candidates = [
+                        value for value in candidates if not is_missing(value)
+                    ]
                 elapsed = time.monotonic() - repair_started
                 timed_out = failure == "cell timeout"
                 for occurrence, row in enumerate(occurrences[dirty]):
@@ -534,7 +635,8 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
                             writer.writerow([row, name, dirty, rank, candidate])
                         truth = truth_rows[row][column]
                         candidate_correct_cells += (
-                            not is_missing(truth) and truth in candidates)
+                            not is_missing(truth) and truth in candidates
+                        )
                 candidate_stream.flush()
                 completed += len(occurrences[dirty])
                 progress()
@@ -548,21 +650,32 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
                 "distinct_timed_out": timed_out_count,
                 "oracle_calls": oracle.calls,
                 "oracle_candidates_submitted": oracle.candidates_submitted,
-                "training_examples": 0 if session is None else len(session.positives) + len(session.negatives),
-                "max_positive_examples_stored": 0 if session is None else len(session.positives),
-                "max_negative_examples_stored": 0 if session is None else len(session.negatives),
+                "training_examples": 0
+                if session is None
+                else len(session.positives) + len(session.negatives),
+                "max_positive_examples_stored": 0
+                if session is None
+                else len(session.positives),
+                "max_negative_examples_stored": 0
+                if session is None
+                else len(session.negatives),
                 "n": config.core.n,
                 **_measurement_fields(measurements),
             }
     for column, name in enumerate(columns):
-        column_metrics[name]["sherma_outcomes"] = dict(Counter(
-            states[row][column].sherma_outcome for row in range(len(source_rows))))
+        column_metrics[name]["sherma_outcomes"] = dict(
+            Counter(
+                states[row][column].sherma_outcome for row in range(len(source_rows))
+            )
+        )
 
     repair_finished = time.monotonic()
     candidate_sets = _read_candidate_sets(candidate_path, columns, len(source_rows))
     column_pools = [
-        [value for value, _ in sorted(counts.items(), key=lambda item: (-item[1], item[0]))
-         ][:config.num_candidates]
+        [
+            value
+            for value, _ in sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+        ][: config.num_candidates]
         for counts in accepted_counts
     ]
     load_dotenv()
@@ -574,7 +687,9 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
     final_correct_cells = 0
     unresolved_cells = 0
     output_tmp = output_path.with_name(f".{output_path.name}.{os.getpid()}.tmp")
-    telemetry_tmp = telemetry_path.with_name(f".{telemetry_path.name}.{os.getpid()}.tmp")
+    telemetry_tmp = telemetry_path.with_name(
+        f".{telemetry_path.name}.{os.getpid()}.tmp"
+    )
     try:
         with output_tmp.open("w", newline="", encoding="utf-8") as stream:
             writer = csv.writer(stream, lineterminator="\n")
@@ -598,8 +713,12 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
                 if row_candidates:
                     jev_calls += 1
                     selections = select_row_with_jev(
-                        columns, descriptions, final, row_candidates,
-                        config.jev_timeout_seconds)
+                        columns,
+                        descriptions,
+                        final,
+                        row_candidates,
+                        config.jev_timeout_seconds,
+                    )
                     for column, candidates in row_candidates.items():
                         selection = selections[column]
                         state = states[row][column]
@@ -650,16 +769,29 @@ def _run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
     progress()
 
 
-def run_pipeline(input_path: Path, ground_truth_path: Path, schema_path: Path,
-                 config_path: Path, oracle_executable: Path, output_path: Path,
-                 telemetry_path: Path) -> None:
+def run_pipeline(
+    input_path: Path,
+    ground_truth_path: Path,
+    schema_path: Path,
+    config_path: Path,
+    oracle_executable: Path,
+    output_path: Path,
+    telemetry_path: Path,
+) -> None:
     log_path = output_path.parent / "error.log"
     try:
         output_path.unlink(missing_ok=True)
         telemetry_path.unlink(missing_ok=True)
         log_path.unlink(missing_ok=True)
-        _run_pipeline(input_path, ground_truth_path, schema_path, config_path,
-                      oracle_executable, output_path, telemetry_path)
+        _run_pipeline(
+            input_path,
+            ground_truth_path,
+            schema_path,
+            config_path,
+            oracle_executable,
+            output_path,
+            telemetry_path,
+        )
     except Exception as error:
         for path in (output_path, telemetry_path):
             try:
@@ -687,8 +819,15 @@ def main() -> int:
     parser.add_argument("--telemetry", type=Path, required=True)
     args = parser.parse_args()
     try:
-        run_pipeline(args.input, args.ground_truth, args.schema, args.config,
-                     args.oracle, args.output, args.telemetry)
+        run_pipeline(
+            args.input,
+            args.ground_truth,
+            args.schema,
+            args.config,
+            args.oracle,
+            args.output,
+            args.telemetry,
+        )
         return 0
     except Exception as error:
         print(f"sherma: {error}", file=sys.stderr)

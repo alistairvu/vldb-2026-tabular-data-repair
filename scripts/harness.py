@@ -1,4 +1,6 @@
 import argparse
+import csv
+import json
 import subprocess
 import sys
 import time
@@ -20,7 +22,44 @@ def process_input_flags(dataset, testcase) -> dict[str, str]:
     return res
 
 
-def exec_algorithm(input_flags, algorithm) -> int:
+def report_accuracy(input_flags):
+    corrupted_data = []
+    cleaned_data = []
+    original_data = []
+
+    with open(input_flags["input"], "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            corrupted_data.append(list(row))
+
+    with open(input_flags["output"], "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            cleaned_data.append(list(row))
+
+    with open(input_flags["ground-truth"], "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            original_data.append(list(row))
+
+    zipped = zip(corrupted_data, cleaned_data, original_data)
+
+    total = 0
+    correct = 0
+
+    for corrupted, cleaned, original in zipped:
+        for corr, clean, orig in zip(corrupted, cleaned, original):
+            if corr != orig:
+                total += 1
+                if clean == orig:
+                    correct += 1
+
+    print(f"Corrupted: {total}, Correct: {correct}")
+    print(f"Accuracy: {round(correct / total * 100, 2)}%")
+    return correct, total
+
+
+def exec_algorithm(input_flags, algorithm) -> tuple[int, float | None]:
     start = time.time()
 
     print(f"Executing algorithm: {algorithm} on dataset: {input_flags['input']}")
@@ -34,13 +73,13 @@ def exec_algorithm(input_flags, algorithm) -> int:
     try:
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
-        return e.returncode
+        return e.returncode, None
 
     end = time.time()
     elapsed = end - start
     print(f"Elapsed time: {elapsed} seconds")
 
-    return 0
+    return 0, elapsed
 
 
 def main() -> int:
@@ -54,7 +93,21 @@ def main() -> int:
 
     input_flags = process_input_flags(args.dataset, args.testcase)
 
-    exit_code = exec_algorithm(input_flags, args.algorithm)
+    exit_code, time = exec_algorithm(input_flags, args.algorithm)
+    correct, total = report_accuracy(input_flags)
+
+    test_output = {
+        "dataset": args.dataset,
+        "testcase": args.testcase,
+        "algorithm": args.algorithm,
+        "exit_code": exit_code,
+        "time": time,
+        "correct": correct,
+        "total": total,
+    }
+
+    with open("test_output.json", "w") as f:
+        json.dump(test_output, f)
 
     return exit_code
 

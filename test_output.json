@@ -1,0 +1,14 @@
+{
+  "dataset": "openpowerlifting",
+  "testcase": "generated-smoke",
+  "algorithm": "sherma",
+  "result": {
+    "returncode": 0,
+    "max_rss": 2981347328,
+    "utime": 243.064536,
+    "stime": 2.944425
+  },
+  "time": 286.5699541568756,
+  "correct": 453,
+  "total": 1379
+}

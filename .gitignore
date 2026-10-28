@@ -9,4 +9,4 @@ output.csv
 output.tmp.csv
 telementry.json
 test_output.json
-test-case-generator-tool/datasets/
+test-case-generator-tool/datasets/**/*.csv

@@ -1,0 +1,1011 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": { "@id": "cr:data", "@type": "@json" },
+    "dataBiases": "cr:dataBiases",
+    "dataCollection": "cr:dataCollection",
+    "dataType": { "@id": "cr:dataType", "@type": "@vocab" },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isEnumeration": "cr:isEnumeration",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "personalSensitiveInformation": "cr:personalSensitiveInformation",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform",
+    "wd": "https://www.wikidata.org/wiki/"
+  },
+  "alternateName": "Approximately 48,000 meets. 800,000 lifters from competitions worldwide",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "license": {
+    "@type": "sc:CreativeWork",
+    "name": "CC0: Public Domain",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  "distribution": [
+    {
+      "contentUrl": "https://www.kaggle.com/api/v1/datasets/download/open-powerlifting/powerlifting-database?datasetVersionNumber=2",
+      "contentSize": "176.105 MB",
+      "md5": "yEAlKKL3Oc0bz86Pquzm9Q==",
+      "encodingFormat": "application/zip",
+      "@id": "archive.zip",
+      "@type": "cr:FileObject",
+      "name": "archive.zip",
+      "description": "Archive containing all the contents of the Powerlifting Database dataset"
+    },
+    {
+      "contentUrl": "openpowerlifting-2024-01-06-4c732975.csv",
+      "containedIn": { "@id": "archive.zip" },
+      "encodingFormat": "application/vnd.ms-excel",
+      "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject",
+      "@type": "cr:FileObject",
+      "name": "openpowerlifting-2024-01-06-4c732975.csv"
+    },
+    {
+      "contentUrl": "openpowerlifting.csv",
+      "containedIn": { "@id": "archive.zip" },
+      "encodingFormat": "application/vnd.ms-excel",
+      "@id": "openpowerlifting.csv_fileobject",
+      "@type": "cr:FileObject",
+      "name": "openpowerlifting.csv",
+      "description": "Competitor data from powerlifting meets included in the OpenPowerlifting database."
+    }
+  ],
+  "recordSet": [
+    {
+      "field": [
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Name" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Name",
+          "@type": "cr:Field",
+          "name": "Name"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Sex" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Sex",
+          "@type": "cr:Field",
+          "name": "Sex"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Event" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Event",
+          "@type": "cr:Field",
+          "name": "Event"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Equipment" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Equipment",
+          "@type": "cr:Field",
+          "name": "Equipment"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Age" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Age",
+          "@type": "cr:Field",
+          "name": "Age"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "AgeClass" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/AgeClass",
+          "@type": "cr:Field",
+          "name": "AgeClass"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "BirthYearClass" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/BirthYearClass",
+          "@type": "cr:Field",
+          "name": "BirthYearClass"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Division" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Division",
+          "@type": "cr:Field",
+          "name": "Division"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "BodyweightKg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/BodyweightKg",
+          "@type": "cr:Field",
+          "name": "BodyweightKg"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "WeightClassKg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/WeightClassKg",
+          "@type": "cr:Field",
+          "name": "WeightClassKg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Squat1Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Squat1Kg",
+          "@type": "cr:Field",
+          "name": "Squat1Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Squat2Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Squat2Kg",
+          "@type": "cr:Field",
+          "name": "Squat2Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Squat3Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Squat3Kg",
+          "@type": "cr:Field",
+          "name": "Squat3Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Squat4Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Squat4Kg",
+          "@type": "cr:Field",
+          "name": "Squat4Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Best3SquatKg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Best3SquatKg",
+          "@type": "cr:Field",
+          "name": "Best3SquatKg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Bench1Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Bench1Kg",
+          "@type": "cr:Field",
+          "name": "Bench1Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Bench2Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Bench2Kg",
+          "@type": "cr:Field",
+          "name": "Bench2Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Bench3Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Bench3Kg",
+          "@type": "cr:Field",
+          "name": "Bench3Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Bench4Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Bench4Kg",
+          "@type": "cr:Field",
+          "name": "Bench4Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Best3BenchKg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Best3BenchKg",
+          "@type": "cr:Field",
+          "name": "Best3BenchKg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Deadlift1Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Deadlift1Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift1Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Deadlift2Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Deadlift2Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift2Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Deadlift3Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Deadlift3Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift3Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Deadlift4Kg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Deadlift4Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift4Kg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Best3DeadliftKg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Best3DeadliftKg",
+          "@type": "cr:Field",
+          "name": "Best3DeadliftKg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "TotalKg" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/TotalKg",
+          "@type": "cr:Field",
+          "name": "TotalKg"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Place" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Place",
+          "@type": "cr:Field",
+          "name": "Place"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Dots" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Dots",
+          "@type": "cr:Field",
+          "name": "Dots"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Wilks" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Wilks",
+          "@type": "cr:Field",
+          "name": "Wilks"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Glossbrenner" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Glossbrenner",
+          "@type": "cr:Field",
+          "name": "Glossbrenner"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Goodlift" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Goodlift",
+          "@type": "cr:Field",
+          "name": "Goodlift"
+        },
+        {
+          "dataType": ["sc:Boolean"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Tested" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Tested",
+          "@type": "cr:Field",
+          "name": "Tested"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Country" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Country",
+          "@type": "cr:Field",
+          "name": "Country"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "State" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/State",
+          "@type": "cr:Field",
+          "name": "State"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Federation" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Federation",
+          "@type": "cr:Field",
+          "name": "Federation"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "ParentFederation" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/ParentFederation",
+          "@type": "cr:Field",
+          "name": "ParentFederation"
+        },
+        {
+          "dataType": ["sc:Date"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "Date" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/Date",
+          "@type": "cr:Field",
+          "name": "Date"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "MeetCountry" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/MeetCountry",
+          "@type": "cr:Field",
+          "name": "MeetCountry"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "MeetState" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/MeetState",
+          "@type": "cr:Field",
+          "name": "MeetState"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "MeetTown" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/MeetTown",
+          "@type": "cr:Field",
+          "name": "MeetTown"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": {
+              "@id": "openpowerlifting-2024-01-06-4c732975.csv_fileobject"
+            },
+            "extract": { "column": "MeetName" }
+          },
+          "@id": "openpowerlifting-2024-01-06-4c732975.csv/MeetName",
+          "@type": "cr:Field",
+          "name": "MeetName"
+        }
+      ],
+      "@id": "openpowerlifting-2024-01-06-4c732975.csv",
+      "@type": "cr:RecordSet",
+      "name": "openpowerlifting-2024-01-06-4c732975.csv"
+    },
+    {
+      "field": [
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Name" }
+          },
+          "@id": "openpowerlifting.csv/Name",
+          "@type": "cr:Field",
+          "name": "Name"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Sex" }
+          },
+          "@id": "openpowerlifting.csv/Sex",
+          "@type": "cr:Field",
+          "name": "Sex"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Event" }
+          },
+          "@id": "openpowerlifting.csv/Event",
+          "@type": "cr:Field",
+          "name": "Event",
+          "description": "The lifts competed in.  SBD is the standard three powerlifts, but competitors may do only some of the lifts depending on the competition.  If someone competed in the BD event (Bench Deadlift), they would not have any squat data but would not be Disqualified because they are not competing in the Squat."
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Equipment" }
+          },
+          "@id": "openpowerlifting.csv/Equipment",
+          "@type": "cr:Field",
+          "name": "Equipment",
+          "description": "The type of equipment that was worn.  Federations may break competition down by different equipment classes. Examples: Raw (No equipment), Wraps (Knee Wraps worn), Single Ply (Single layer of supportive equipment) and Multi Ply (Multiple layers of supportive equipment)"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Age" }
+          },
+          "@id": "openpowerlifting.csv/Age",
+          "@type": "cr:Field",
+          "name": "Age",
+          "description": "The age of the lifter in Years"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "AgeClass" }
+          },
+          "@id": "openpowerlifting.csv/AgeClass",
+          "@type": "cr:Field",
+          "name": "AgeClass",
+          "description": "The age class in which the lifter competed.  Federations may break competition down by different age groups."
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Division" }
+          },
+          "@id": "openpowerlifting.csv/Division",
+          "@type": "cr:Field",
+          "name": "Division"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "BodyweightKg" }
+          },
+          "@id": "openpowerlifting.csv/BodyweightKg",
+          "@type": "cr:Field",
+          "name": "BodyweightKg",
+          "description": "The lifter\u0027s bodyweight in kilograms."
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "WeightClassKg" }
+          },
+          "@id": "openpowerlifting.csv/WeightClassKg",
+          "@type": "cr:Field",
+          "name": "WeightClassKg",
+          "description": "The weight class in which the lifter competed. Federations may break competition down by different weight classes.  The lifter\u0027s bodyweight may not exceed this number at the time of weighing in."
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Squat1Kg" }
+          },
+          "@id": "openpowerlifting.csv/Squat1Kg",
+          "@type": "cr:Field",
+          "name": "Squat1Kg",
+          "description": "The lifter\u0027s first squat attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Squat2Kg" }
+          },
+          "@id": "openpowerlifting.csv/Squat2Kg",
+          "@type": "cr:Field",
+          "name": "Squat2Kg",
+          "description": "The lifter\u0027s second squat attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Squat3Kg" }
+          },
+          "@id": "openpowerlifting.csv/Squat3Kg",
+          "@type": "cr:Field",
+          "name": "Squat3Kg",
+          "description": "The lifter\u0027s third squat attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Squat4Kg" }
+          },
+          "@id": "openpowerlifting.csv/Squat4Kg",
+          "@type": "cr:Field",
+          "name": "Squat4Kg",
+          "description": "The lifter\u0027s fourth squat attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN. Not commonly used, only for record attempts."
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Best3SquatKg" }
+          },
+          "@id": "openpowerlifting.csv/Best3SquatKg",
+          "@type": "cr:Field",
+          "name": "Best3SquatKg",
+          "description": "The best squat of [Squat1Kg, Squat2Kg, Squat3Kg].  This value will count towards TotalKg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Bench1Kg" }
+          },
+          "@id": "openpowerlifting.csv/Bench1Kg",
+          "@type": "cr:Field",
+          "name": "Bench1Kg",
+          "description": "The lifter\u0027s first bench attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Bench2Kg" }
+          },
+          "@id": "openpowerlifting.csv/Bench2Kg",
+          "@type": "cr:Field",
+          "name": "Bench2Kg",
+          "description": "The lifter\u0027s second bench attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Bench3Kg" }
+          },
+          "@id": "openpowerlifting.csv/Bench3Kg",
+          "@type": "cr:Field",
+          "name": "Bench3Kg",
+          "description": "The lifter\u0027s third bench attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Bench4Kg" }
+          },
+          "@id": "openpowerlifting.csv/Bench4Kg",
+          "@type": "cr:Field",
+          "name": "Bench4Kg",
+          "description": "The lifter\u0027s fourth bench attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN. Not commonly used, only for record attempts."
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Best3BenchKg" }
+          },
+          "@id": "openpowerlifting.csv/Best3BenchKg",
+          "@type": "cr:Field",
+          "name": "Best3BenchKg",
+          "description": "The best squat of [Bench1Kg, Bench2Kg, Bench3Kg].  This value will count towards TotalKg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Deadlift1Kg" }
+          },
+          "@id": "openpowerlifting.csv/Deadlift1Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift1Kg",
+          "description": "The lifter\u0027s first deadlift attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Deadlift2Kg" }
+          },
+          "@id": "openpowerlifting.csv/Deadlift2Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift2Kg",
+          "description": "The lifter\u0027s second deadlift attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Deadlift3Kg" }
+          },
+          "@id": "openpowerlifting.csv/Deadlift3Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift3Kg",
+          "description": "The lifter\u0027s third deadlift attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Deadlift4Kg" }
+          },
+          "@id": "openpowerlifting.csv/Deadlift4Kg",
+          "@type": "cr:Field",
+          "name": "Deadlift4Kg",
+          "description": "The lifter\u0027s fourth deadlift attempt in kilograms.  Negative means the attempt was failed.  Ignore NaN. Not commonly used, only for record attempts."
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Best3DeadliftKg" }
+          },
+          "@id": "openpowerlifting.csv/Best3DeadliftKg",
+          "@type": "cr:Field",
+          "name": "Best3DeadliftKg",
+          "description": "The best squat of [Deadlift1Kg, Deadlift2Kg, Deadlift3Kg].  This value will count towards TotalKg"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "TotalKg" }
+          },
+          "@id": "openpowerlifting.csv/TotalKg",
+          "@type": "cr:Field",
+          "name": "TotalKg",
+          "description": "The sum of Best3SquatKg, Best3BenchKg, Best3DeadliftKg"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Place" }
+          },
+          "@id": "openpowerlifting.csv/Place",
+          "@type": "cr:Field",
+          "name": "Place"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Wilks" }
+          },
+          "@id": "openpowerlifting.csv/Wilks",
+          "@type": "cr:Field",
+          "name": "Wilks",
+          "description": "Wilks points, often used as a Best Lifter formula. See https://en.wikipedia.org/wiki/Wilks_Coefficient"
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "McCulloch" }
+          },
+          "@id": "openpowerlifting.csv/McCulloch",
+          "@type": "cr:Field",
+          "name": "McCulloch",
+          "description": "McCulloch points, another formula often used as a Best Lifter formula."
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Glossbrenner" }
+          },
+          "@id": "openpowerlifting.csv/Glossbrenner",
+          "@type": "cr:Field",
+          "name": "Glossbrenner",
+          "description": "Glossbrenner points, another formula often used as a Best Lifter formula."
+        },
+        {
+          "dataType": ["sc:Float"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "IPFPoints" }
+          },
+          "@id": "openpowerlifting.csv/IPFPoints",
+          "@type": "cr:Field",
+          "name": "IPFPoints",
+          "description": "IPFPoints, a formula used as a Best Lifter formula for the IPF and its affiliates. See https://www.powerlifting.sport/rulescodesinfo/ipf-formula.html"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Tested" }
+          },
+          "@id": "openpowerlifting.csv/Tested",
+          "@type": "cr:Field",
+          "name": "Tested",
+          "description": "Was the lifter drug tested"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Country" }
+          },
+          "@id": "openpowerlifting.csv/Country",
+          "@type": "cr:Field",
+          "name": "Country"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Federation" }
+          },
+          "@id": "openpowerlifting.csv/Federation",
+          "@type": "cr:Field",
+          "name": "Federation",
+          "description": "Powerlifting Federation the meet was hosted by"
+        },
+        {
+          "dataType": ["sc:Date"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "Date" }
+          },
+          "@id": "openpowerlifting.csv/Date",
+          "@type": "cr:Field",
+          "name": "Date"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "MeetCountry" }
+          },
+          "@id": "openpowerlifting.csv/MeetCountry",
+          "@type": "cr:Field",
+          "name": "MeetCountry"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "MeetState" }
+          },
+          "@id": "openpowerlifting.csv/MeetState",
+          "@type": "cr:Field",
+          "name": "MeetState"
+        },
+        {
+          "dataType": ["sc:Text"],
+          "source": {
+            "fileObject": { "@id": "openpowerlifting.csv_fileobject" },
+            "extract": { "column": "MeetName" }
+          },
+          "@id": "openpowerlifting.csv/MeetName",
+          "@type": "cr:Field",
+          "name": "MeetName"
+        }
+      ],
+      "@id": "openpowerlifting.csv",
+      "@type": "cr:RecordSet",
+      "name": "openpowerlifting.csv",
+      "description": "Competitor data from powerlifting meets included in the OpenPowerlifting database."
+    }
+  ],
+  "version": 2,
+  "keywords": ["subject \u003E health and fitness \u003E exercise"],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "Kaggle",
+    "url": "https://www.kaggle.com"
+  },
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "OpenPowerlifting",
+    "url": "/organizations/open-powerlifting",
+    "image": "https://storage.googleapis.com/kaggle-organizations/1313/thumbnail.png%3Fr=822"
+  },
+  "publisher": {
+    "@type": "sc:Organization",
+    "name": "Kaggle",
+    "url": "https://www.kaggle.com/organizations/kaggle",
+    "image": "https://storage.googleapis.com/kaggle-organizations/4/thumbnail.png"
+  },
+  "thumbnailUrl": "https://storage.googleapis.com/kaggle-datasets-images/11741/395080/a386375e7d0684b93eb77f3150c89a60/dataset-card.png?t=2019-04-25-18-32-10",
+  "dateModified": "2024-01-06T21:27:54.153",
+  "datePublished": "2018-02-02T16:42:51.183",
+  "@type": "sc:Dataset",
+  "name": "Powerlifting Database",
+  "url": "https://www.kaggle.com/datasets/open-powerlifting/powerlifting-database/versions/2",
+  "description": "### Context\n\nThis dataset is a snapshot of the [OpenPowerlifting](https://www.openpowerlifting.org/) database as of January 2024. OpenPowerlifting is creating a public-domain archive of powerlifting history. Powerlifting is a sport in which competitors compete to lift the most weight for their class in three separate barbell lifts: the Squat, Bench, and Deadlift.\n\n### Content\n\nThe data is represented by \u0060openpowerlifting.csv\u0060, which includes all information on the meets (competitions) as well as the competitors who attended those meets.\n\nVersion 1 of this dataset included two files: \u0060meets.csv\u0060 and \u0060openpowerlifting.csv\u0060. \u0060meets.csv\u0060 is a record of all meets (competitions) included in the OpenPowerlifting database. \u0060openpowerlifting.csv\u0060 is a record of all competitors who attended those meets, and the stats and lifts that they recorded at them. \n\nIn Version 2\u002B, \u0060meets.csv\u0060 has been subsumed by \u0060openpowerlifting.csv\u0060, which contains the same information.\n\nFor more on how this dataset was collected, see the [OpenPowerlifting FAQ](https://www.openpowerlifting.org/faq).\n\n### Acknowledgements\n\nThis dataset is republished as-is from the [OpenPowerlifting source](https://www.openpowerlifting.org/data).\n\nPlease address all issues or questions about the data to: issues@openpowerlifting.org"
+}

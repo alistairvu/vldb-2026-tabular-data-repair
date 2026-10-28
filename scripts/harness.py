@@ -1,9 +1,11 @@
 import argparse
 import csv
 import json
+import resource
 import subprocess
 import sys
 import time
+from multiprocessing import Manager, Process
 
 
 def process_input_flags(dataset, testcase) -> dict[str, str]:
@@ -59,27 +61,45 @@ def report_accuracy(input_flags):
     return correct, total
 
 
-def exec_algorithm(input_flags, algorithm) -> tuple[int, float | None]:
+def _exec(cmd, result):
+    p = subprocess.Popen(cmd)
+    p.wait()
+    rusage = resource.getrusage(resource.RUSAGE_CHILDREN)
+    result["returncode"] = p.returncode
+    result["max_rss"] = rusage.ru_maxrss
+    result["utime"] = rusage.ru_utime
+    result["stime"] = rusage.ru_stime
+
+
+def exec_algorithm(input_flags, algorithm) -> tuple[dict, float | None]:
+
     start = time.time()
 
     print(f"Executing algorithm: {algorithm} on dataset: {input_flags['input']}")
 
-    cmd = [
-        "python",
-        f"algorithm/{algorithm}.py",
-        *[f"--{k}={v}" for k, v in input_flags.items()],
-    ]
-
-    try:
-        subprocess.run(cmd, check=True)
-    except subprocess.CalledProcessError as e:
-        return e.returncode, None
+    with Manager() as manager:
+        result = manager.dict()
+        cmd = [
+            "python",
+            f"algorithm/{algorithm}.py",
+            *[f"--{k}={v}" for k, v in input_flags.items()],
+        ]
+        process = Process(
+            target=_exec,
+            args=(
+                cmd,
+                result,
+            ),
+        )
+        process.start()
+        process.join()
+        result = dict(result)
 
     end = time.time()
     elapsed = end - start
     print(f"Elapsed time: {elapsed} seconds")
 
-    return 0, elapsed
+    return result, elapsed
 
 
 def main() -> int:
@@ -93,23 +113,23 @@ def main() -> int:
 
     input_flags = process_input_flags(args.dataset, args.testcase)
 
-    exit_code, time = exec_algorithm(input_flags, args.algorithm)
+    result, time = exec_algorithm(input_flags, args.algorithm)
     correct, total = report_accuracy(input_flags)
 
     test_output = {
         "dataset": args.dataset,
         "testcase": args.testcase,
         "algorithm": args.algorithm,
-        "exit_code": exit_code,
+        "result": result,
         "time": time,
         "correct": correct,
         "total": total,
     }
 
     with open("test_output.json", "w") as f:
-        json.dump(test_output, f)
+        json.dump(test_output, f, indent=2)
 
-    return exit_code
+    return result.get("returncode", 1)
 
 
 if __name__ == "__main__":

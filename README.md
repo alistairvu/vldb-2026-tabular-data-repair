@@ -170,3 +170,33 @@ Generated cases are written to
 `original.csv`, its `corrupted.csv`, and `case.json` describing every changed
 cell. The generator uses the configured seed, so identical inputs and settings
 produce identical cases.
+
+## Run Harness
+
+To run the harness, run the following command:
+
+```console
+python scripts/harness.py \
+    --dataset openpowerlifting \
+    --testcase generated-smoke \
+    --algorithm sherma
+```
+
+This will run the harness on the `openpowerlifting` dataset, using the `generated-smoke` test case, and the `sherma` algorithm. The harness will output the results of the repair as a JSON file with the following schema:
+
+```json
+{
+  "dataset": "openpowerlifting",
+  "testcase": "generated-smoke",
+  "algorithm": "sherma",
+  "result": {
+    "returncode": 0,
+    "max_rss": 2981347328, // Max resident set size in bytes
+    "utime": 243.064536, // User time in seconds
+    "stime": 2.944425 // System time in seconds
+  },
+  "time": 286.5699541568756, // Total time in seconds
+  "correct": 453, // Number of correct cells
+  "total": 1379 // Total number of corrupted cells
+}
+```
